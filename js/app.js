@@ -4,19 +4,21 @@ const canvas = document.getElementById('my-canvas');
 
 
 const groundLevel = 375; //setting most bottom layer of the 
+let xPosition = 0;
 
 const ctx = canvas.getContext('2d');
 let groundImage = new Image();
 
-groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/06_29_2018_Day1_First_Project/js/sprites/world1_image.png';
+groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/world1_image.png';
 
 groundImage.onload = function () {//draw the ground image
-	ctx.drawImage(groundImage, 0, 200, 600, 25, 0, 375, 600, 25)
+	ctx.drawImage(groundImage, xPosition, 200, 600, 25, 0, 375, 600, 25)
 }
 
 
 //make an array with all the current characters 
 const allChars = [];
+const allObstacles = [];
 
 
 
@@ -48,11 +50,8 @@ class Enemy {
 function clearCanvas() {
   // this will erase the entire canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  groundImage = new Image();
-  groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/06_29_2018_Day1_First_Project/js/sprites/world1_image.png';
-  groundImage.onload = function () {//draw the ground image
-	ctx.drawImage(groundImage, 0, 200, 600, 25, 0, 375, 600, 25)
-}
+  groundImage.onload();
+  
 }
 
 
@@ -81,6 +80,7 @@ const gravity = (object) => {
 const standingOnObject = (character) => {
 	if(character.y + character.height >= 375) {
     character.velocity = 0;
+    character.y = 335;
 		return true
 	} else {
 		return false
@@ -95,23 +95,25 @@ document.addEventListener('keydown', (event) => {
 
   // up 38
   if(event.keyCode == 38 ){//&& jumpPress < 2) {
-  	console.log('got up key')
+  	//console.log('got up key')
     mainPlayer.y -= 80; // you may want to use a val much higher than 1
   }
 
-  // down 40
-  if(event.keyCode == 40 && mainPlayer.y + mainPlayer.height < canvas.height) {
-    mainPlayer.y += 20; // you may want to use a val much higher than 1
-  }
+  // down 40 - no need
+  // if(event.keyCode == 40 && mainPlayer.y + mainPlayer.height < canvas.height) {
+  //   mainPlayer.y += 20; // you may want to use a val much higher than 1
+  // }
 
   // left 37
   if(event.keyCode == 37 && mainPlayer.x > 0) {
     mainPlayer.x -= 20; // you may want to use a val much higher than 1
+    xPosition -= 20;
   }
 
   // right 39
   if(event.keyCode == 39 && mainPlayer.x + mainPlayer.width < canvas.width) {
     mainPlayer.x += 20; // you may want to use a val much higher than 1
+    xPosition += 20;
   }
 
   // clearCanvas();
@@ -133,7 +135,7 @@ function animateCanvas() {
 	// }
 
  	clearCanvas();
-  	mainPlayer.draw();
+  mainPlayer.draw();
   // pass this function into animate 
   window.requestAnimationFrame(animateCanvas)
 }
