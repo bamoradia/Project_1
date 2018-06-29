@@ -26,13 +26,15 @@ const mainPlayer = {
 	height: 40,
 	y: groundLevel - 40, 
 	width: 25, 
+  velocity: 0,
 	draw(){
 		ctx.beginPath();
     	ctx.rect(this.x, this.y, this.width, this.height);
     	ctx.fillStyle = "red";
     	ctx.fill();
     	ctx.closePath();
-    }
+    }, 
+
 
 }
 
@@ -69,7 +71,8 @@ const gravity = (object) => {
 	if(standingOnObject(object)){
 		//do nothing
 	} else {
-		object.y = object.y + 2;
+    object.velocity += 0.25;
+		object.y = object.y + object.velocity;
 	}
 	return
 }
@@ -77,6 +80,7 @@ const gravity = (object) => {
 
 const standingOnObject = (character) => {
 	if(character.y + character.height >= 375) {
+    character.velocity = 0;
 		return true
 	} else {
 		return false
@@ -102,12 +106,12 @@ document.addEventListener('keydown', (event) => {
 
   // left 37
   if(event.keyCode == 37 && mainPlayer.x > 0) {
-    mainPlayer.x -= 0; // you may want to use a val much higher than 1
+    mainPlayer.x -= 20; // you may want to use a val much higher than 1
   }
 
   // right 39
   if(event.keyCode == 39 && mainPlayer.x + mainPlayer.width < canvas.width) {
-    mainPlayer.x += 0; // you may want to use a val much higher than 1
+    mainPlayer.x += 20; // you may want to use a val much higher than 1
   }
 
   // clearCanvas();
