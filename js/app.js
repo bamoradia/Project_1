@@ -38,9 +38,7 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
     	ctx.fillStyle = "red";
     	ctx.fill();
     	ctx.closePath();
-    }, 
-
-
+    },
 }
 
 mainPlayer.draw();//draw the main character for the first time
@@ -156,7 +154,8 @@ animateCanvas();
 
 
 
-
+//just used to prevent overheating and overusing resources
+//remove for actual game
 $('#pause').on('click', (event) => {
   pause = !pause;
   if(pause === false){
