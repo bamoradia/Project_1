@@ -34,11 +34,11 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
   velocity: 0,
 	draw(){//redraw the main character
 		ctx.beginPath();
-    	ctx.rect(this.x, this.y, this.width, this.height);
-    	ctx.fillStyle = "red";
-    	ctx.fill();
-    	ctx.closePath();
-    },
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = "green";
+    ctx.fill();
+    ctx.closePath();
+  },
 }
 
 mainPlayer.draw();//draw the main character for the first time
@@ -46,8 +46,19 @@ mainPlayer.draw();//draw the main character for the first time
 
 class Enemy {//enemy Class, will be used to make multiple enemies
 	constructor() {
-
-	}
+    this.x = 400; 
+    this.y = 345;
+    this.width = 20; 
+    this.height =  30;
+    this.velocity =  0;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = "brown";
+    ctx.fill();
+    ctx.closePath();
+  }
 }
 
 function clearCanvas() {//clears the canvas and redraws the ground image
@@ -58,6 +69,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 }
 
 
+const gumba = new Enemy();
 
 // ctx.beginPath();
 // ctx.rect(, this.y, this.width, this.height);
@@ -132,9 +144,6 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 function animateCanvas() {
 	gravity(mainPlayer);
 
-	// if(mainPlayer.y <= 335){
-	// 	mainPlayer.y = mainPlayer.y + 2;
-	// }
   xPosition += gameSpeed;
  	clearCanvas();
   mainPlayer.draw();
