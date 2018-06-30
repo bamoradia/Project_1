@@ -14,7 +14,7 @@ let groundImage = new Image(); //setting up ground image
 groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/world1_image.png';
 
 groundImage.onload = function () {//draw the ground image
-	ctx.drawImage(groundImage, xPosition, 200, 600, 25, 0, 375, 600, 25)
+	ctx.drawImage(groundImage, xPosition, 200, canvas.width, 25, 0, 375, canvas.width, 25)
 }
 
 
@@ -61,6 +61,13 @@ class Enemy {//enemy Class, will be used to make multiple enemies
   }
 }
 
+
+class Obstacle {//class of obstacles to be called inside of another function
+  constructor (height) {
+    this.x = 400;
+  }
+}
+
 function clearCanvas() {//clears the canvas and redraws the ground image
   // this will erase the entire canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -91,9 +98,9 @@ const gravity = (object) => {
 	return
 }
 
-
+//function to check if the input object is standing on anything including the ground.
 const standingOnObject = (character) => { //checks if the object is standing on an object
-	if(character.y + character.height >= 375) {
+	if(character.y + character.height >= groundLevel) {
     character.velocity = 0;
     character.y = 335;
 		return true
@@ -103,7 +110,39 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 }
 
 
-const makeObstacle = () => {//function to make obstacles
+//function to check for interference between enemy object and main player. To be used for death condition for either character
+const checkForInterference = () => {
+  const mainPlayerL = mainPlayer.x;
+  const mainPlayerR = mainPlayer.x + mainPlayer.width;
+  const mainPlayerU = mainPlayer.y;
+  const mainPlayerD = mainPlayer.y + mainPlayer.height;
+
+
+  const gumbaL = gumba.x;
+  const gumbaR = gumba.x + gumba.width;
+  const gumbaU = gumba.y;
+  const gumbaD = gumba.y + gumba.height;
+
+  //console.log(enemyL, enemyR, enemyU, enemyD, marioL, marioR, marioU, marioD)
+  // console.log(enemyL > marioL);
+  // console.log(enemyL < marioR);
+  // console.log(enemyD > marioD);
+  // console.log(enemyD < marioU);
+
+  if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
+    console.log("Enemy DL corner is in mario's box");
+    return true
+  } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
+    console.log("Enemy DR corner is in mario's box");
+    return true
+  } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU) {
+    console.log("Enemy UR corner is in mario's box");
+    return true
+  } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU) {
+    console.log("Enemy UL corner is in mario's box");
+    return true
+  }
+  return false
   
 }
 
@@ -147,9 +186,11 @@ function animateCanvas() {
   xPosition += gameSpeed;
  	clearCanvas();
   mainPlayer.draw();
+  gumba.draw();
+  const check = checkForInterference();
   //console.log(xPosition);
   // pass this function into animate 
-  if(pause){
+  if(pause || check){
     return
   }
   window.requestAnimationFrame(animateCanvas)
