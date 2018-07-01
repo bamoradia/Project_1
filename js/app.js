@@ -64,7 +64,18 @@ class Enemy {//enemy Class, will be used to make multiple enemies
 
 class Obstacle {//class of obstacles to be called inside of another function
   constructor (height) {
-    this.x = 400;
+    this.x = 300;
+    this.y = 345;
+    this.width = 20; 
+    this.height = 30; 
+    this.velocity = 0;
+  }
+  draw () {
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = "yellow";
+    ctx.fill();
+    ctx.closePath(); 
   }
 }
 
@@ -77,7 +88,10 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 
 
 const gumba = new Enemy();
+const wall = new Obstacle();
 
+allEnemies[0] = gumba;
+allObstacles[0] = wall;
 // ctx.beginPath();
 // ctx.rect(, this.y, this.width, this.height);
 // ctx.fillStyle = "brown";
@@ -111,39 +125,45 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 
 
 //function to check for interference between enemy object and main player. To be used for death condition for either character
+
+//need to adjust so that a top interference kills the enemy otherwise main character is killed
 const checkForInterference = () => {
-  const mainPlayerL = mainPlayer.x;
-  const mainPlayerR = mainPlayer.x + mainPlayer.width;
-  const mainPlayerU = mainPlayer.y;
-  const mainPlayerD = mainPlayer.y + mainPlayer.height;
 
+  for(let i = 0; i < allEnemies.length; i++) {
+    const enemy = allEnemies[i];
 
-  const gumbaL = gumba.x;
-  const gumbaR = gumba.x + gumba.width;
-  const gumbaU = gumba.y;
-  const gumbaD = gumba.y + gumba.height;
-
-  //console.log(enemyL, enemyR, enemyU, enemyD, marioL, marioR, marioU, marioD)
-  // console.log(enemyL > marioL);
-  // console.log(enemyL < marioR);
-  // console.log(enemyD > marioD);
-  // console.log(enemyD < marioU);
-
-  if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
-    console.log("Enemy DL corner is in mario's box");
-    return true
-  } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
-    console.log("Enemy DR corner is in mario's box");
-    return true
-  } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU) {
-    console.log("Enemy UR corner is in mario's box");
-    return true
-  } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU) {
-    console.log("Enemy UL corner is in mario's box");
-    return true
-  }
-  return false
+    const mainPlayerL = mainPlayer.x;
+    const mainPlayerR = mainPlayer.x + mainPlayer.width;
+    const mainPlayerU = mainPlayer.y;
+    const mainPlayerD = mainPlayer.y + mainPlayer.height;
   
+  
+    const gumbaL = enemy.x;
+    const gumbaR = enemy.x + enemy.width;
+    const gumbaU = enemy.y;
+    const gumbaD = enemy.y + enemy.height;
+  
+    //console.log(enemyL, enemyR, enemyU, enemyD, marioL, marioR, marioU, marioD)
+    // console.log(enemyL > marioL);
+    // console.log(enemyL < marioR);
+    // console.log(enemyD > marioD);
+    // console.log(enemyD < marioU);
+  
+    if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
+      console.log("Enemy DL corner is in mario's box");
+      return true
+    } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU  ) {
+      console.log("Enemy DR corner is in mario's box");
+      return true
+    } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
+      console.log("Enemy UR corner is in mario's box");
+      return true
+    } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
+      console.log("Enemy UL corner is in mario's box");
+      return true
+    }
+    return false
+  }
 }
 
 
@@ -163,13 +183,13 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 
   // left 37
   if(event.keyCode == 37 && mainPlayer.x > 0) { //listens for the left press
-    mainPlayer.x -= 20; // the player moves 20px to the left
+    mainPlayer.x -= 10; // the player moves 20px to the left
     // xPosition -= 20;
   }
 
   // right 39
   if(event.keyCode == 39 && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-    mainPlayer.x += 20; //moves character 20px to the right
+    mainPlayer.x += 10; //moves character 20px to the right
     // xPosition += 20;
   }
 })
@@ -187,20 +207,24 @@ function animateCanvas() {
  	clearCanvas();
   mainPlayer.draw();
   gumba.draw();
+  wall.draw();
   const check = checkForInterference();
   //console.log(xPosition);
   // pass this function into animate 
   if(pause || check){
-    return
+    return true
   }
   window.requestAnimationFrame(animateCanvas)
 
 }
 
 
-animateCanvas();
+const gameOver = animateCanvas();
 
 
+if(gameOver) {
+  console.log('The game is over!')
+}
 
 
 
