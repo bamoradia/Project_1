@@ -12,6 +12,7 @@ let rightKeyPress = false; // set right key press as false
 let leftKeyPress = false; // set left key press as false
 let jumpCount = 0; // set number of jumps as 0
 let gameOver = false; //set game over as false
+let enemyCount = 0;
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -308,6 +309,7 @@ const movePlayer = () => {
 
     if(mainPlayer.x > 200) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
+      enemyCount = 0;
       mainPlayer.moving = true;
       mainPlayer.lastY = mainPlayer.y;
     } else { //move the player not the background
@@ -370,6 +372,14 @@ function animateCanvas() {
     return
   } else if (check == 'mario wins') {
     console.log('Mario won!')
+  }
+
+  if(xPosition % 250 === 0 && xPosition != 0 && enemyCount < 1){
+    console.log('New Enemy Coming!')
+    const gumba1 = new Enemy();
+    gumba1.x = 610;
+    allEnemies.push(gumba1)
+    enemyCount++;
   }
   window.requestAnimationFrame(animateCanvas)
 
