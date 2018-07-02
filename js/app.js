@@ -120,10 +120,10 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 }
 
 
-const gumba = new Enemy();
+//const gumba = new Enemy();
 const wall = new Obstacle();
 
-allEnemies[0] = gumba; //add trial enemy to enemies array
+//allEnemies[0] = gumba; //add trial enemy to enemies array
 allObstacles[0] = wall; //add trial obstacle to obstacles array
 
 
@@ -144,6 +144,20 @@ const gravity = (object) => {
 
 //function to check if the input object is standing on anything including the ground.
 const standingOnObject = (character) => { //checks if the object is standing on an object
+  for(let i = 0; i < allObstacles.length; i++) {
+   // console.log(character.y + character.height, allObstacles[i].y)
+    if(character.y + character.height <= allObstacles[i].y && 
+      character.x < allObstacles[i].x + allObstacles[i].width &&
+      character.x + character.width > allObstacles[i].x) {
+      console.log('am in loop')
+    character.yVelocity = 0; //set the character's yVelocity to 0
+    character.y =  allObstacles[i].y - character.height; //draw the character to just above the ground
+    jumpCount = 0; //reset the jump counter
+    return true
+    }
+  }
+
+
 	if(character.y + character.height >= groundLevel) { 
     character.yVelocity = 0; //set the character's yVelocity to 0
     character.y = 335; //draw the character to just above the ground
@@ -183,7 +197,7 @@ const checkForInterference = () => {
     const gumbaR = enemy.x + enemy.width;
     const gumbaU = enemy.y;
     const gumbaD = enemy.y + enemy.height;
-    console.log(mainPlayer.lastY, mainPlayer.y);
+    //console.log(mainPlayer.lastY, mainPlayer.y);
 
     //console.log(mainPlayer.y + mainPlayer.height < enemy.y)
     if(mainPlayer.lastY < mainPlayer.y /* && mainPlayer.y + mainPlayer.height - 2 < enemy.y*/) {
