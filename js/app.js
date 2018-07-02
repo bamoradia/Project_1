@@ -38,6 +38,7 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
 	width: 25, 
   yVelocity: 0,
   lastY: 335, //tracks the Y direction that mario is currently going
+  moving: false,
 	draw(){//redraw the main character
 		ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
@@ -75,7 +76,7 @@ class Enemy {//enemy Class, will be used to make multiple enemies
     this.width = 20; 
     this.height =  30;
     this.yVelocity =  0; 
-    this.xVelocity = -0.2; //all enemies will move in relation to the background intially
+    this.xVelocity = -1; //all enemies will move in relation to the background intially
   }
   draw() {
     ctx.beginPath();
@@ -112,6 +113,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
     allEnemies[i].draw();
   }
   for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
+    allObstacles[i].x = allObstacles[i].x - gameSpeed;
     allObstacles[i].draw();
   }
   mainPlayer.draw();//draw the main characeter
@@ -154,7 +156,11 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 
 const moveEnemies = () => { //function to move all enemies based on their xVelocity
   for(let i = 0; i < allEnemies.length; i++) {
-    allEnemies[i].x = allEnemies[i].x - gameSpeed + allEnemies[i].xVelocity;
+    if(mainPlayer.moving) {
+      allEnemies[i].x = allEnemies[i].x - 2 + allEnemies[i].xVelocity;
+    } else{
+      allEnemies[i].x = allEnemies[i].x + allEnemies[i].xVelocity;     
+    }
   }
 }
 
@@ -185,7 +191,6 @@ const checkForInterference = () => {
         enemy.x + enemy.width > mainPlayer.x &&
         enemy.y < mainPlayer.y + mainPlayer.height &&
         enemy.height + enemy.y > mainPlayer.y) {
-        console.log('got in here')
         allEnemies.splice(i, 1);
         //console.log("Enemy DL corner is in mario's box");
         return 'mario wins'
@@ -201,27 +206,10 @@ const checkForInterference = () => {
       }
     }
   }
-      // } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU  ) {
-      //   console.log("Enemy DR corner is in mario's box");
-      //   return true
-      // } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
-      //   console.log("Enemy UR corner is in mario's box");
-      //   return true
-      // } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
-      //   console.log("Enemy UL corner is in mario's box");
-      //   return true
-      // }
+
       return false
 }
   
-
-
-
-const topCheck = () => {
-  
-}
-
-
 document.addEventListener('keydown', (event) => {//event listener on keypresses
 
 
@@ -246,8 +234,14 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 //move player based on key presses
 const movePlayer = () => {
   if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-    mainPlayer.x += 2.5; //moves character 2.5px to the right
+ //moves character 2.5px to the right
     // xPosition += 20;
+    if(mainPlayer.x > 200) {
+      xPosition += 2.5;
+      mainPlayer.moving = true;
+    } else {
+      mainPlayer.x += 2.5;
+    }
   }
 
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
@@ -278,6 +272,7 @@ document.addEventListener('keyup', (event) => {
 
   if(event.keyCode == 39) {//turn keypress holder off on right key
     rightKeyPress = false;
+    mainPlayer.moving = false;
   }
 })
 
@@ -289,8 +284,8 @@ document.addEventListener('keyup', (event) => {
 function animateCanvas() {
   movePlayer(); //move player
 	gravity(mainPlayer); //gravity's affect on the player
-  xPosition += gameSpeed;//move the position of the background
-  //moveEnemies();//move all enemies
+  //xPosition += gameSpeed;//move the position of the background
+  moveEnemies();//move all enemies
   
  	clearCanvas();//clear the canvas
   const check = checkForInterference();//check for interference between main player and any enemies
