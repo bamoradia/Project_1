@@ -11,6 +11,8 @@ let upKeyPress = false;
 let rightKeyPress = false;
 let leftKeyPress = false;
 let jumpCount = 0;
+let jumpTick = 0;
+let gameOver = false;
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -35,7 +37,7 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
 	height: 40,
 	y: groundLevel - 40, 
 	width: 25, 
-  velocity: 0,
+  yVelocity: 0,
 	draw(){//redraw the main character
 		ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
@@ -45,25 +47,25 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
   },
 }
 
-//mainPlayer.draw();//draw the main character for the first time
+mainPlayer.draw();//draw the main character for the first time
 
 
-const trialPlayer = {
-  position: [200, groundLevel - 40, 25, 40],
-  desiredPosition: [200, groundLevel - 40, 40, 25],
-  yVelocity: 0, 
-  xVelocity: 0,
-  angle: 0,
-  draw() {
-    ctx.beginPath();
-    ctx.rect(this.position[0], this.position[1], this.position[2], this.position[3]);
-    ctx.fillStyle = 'blue';
-    ctx.fill();
-    ctx.closePath(); 
-  }
-}
+// const trialPlayer = {
+//   position: [200, groundLevel - 40, 25, 40],
+//   desiredPosition: [200, groundLevel - 40, 40, 25],
+//   yVelocity: 0, 
+//   xVelocity: 0,
+//   angle: 0,
+//   draw() {
+//     ctx.beginPath();
+//     ctx.rect(this.position[0], this.position[1], this.position[2], this.position[3]);
+//     ctx.fillStyle = 'blue';
+//     ctx.fill();
+//     ctx.closePath(); 
+//   }
+// }
 
-trialPlayer.draw();
+// trialPlayer.draw();
 
 
 class Enemy {//enemy Class, will be used to make multiple enemies
@@ -91,7 +93,7 @@ class Obstacle {//class of obstacles to be called inside of another function
     this.y = 345;
     this.width = 20; 
     this.height = 30; 
-    this.velocity = 0;
+    this.yVelocity = 0;
   }
   draw () {
     ctx.beginPath();
@@ -109,7 +111,6 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   for(let i = 0; i < allEnemies.length; i++) {
     allEnemies[i].draw();
   }
-  
 }
 
 
@@ -132,8 +133,9 @@ const gravity = (object) => {
 	if(standingOnObject(object)){//checking if character is standing on an object
 		//do nothing
 	} else {
-    object.velocity += 0.25;//the "acceleration" due to gravity
-		object.y = object.y + object.velocity; //the velocity of the object increases every tick
+     object.yVelocity += 0.45;//the "acceleration" due to gravity
+     object.y = object.y + object.yVelocity;
+      //the velocity of the object increases every tick
 	}
 	return
 }
@@ -141,7 +143,7 @@ const gravity = (object) => {
 //function to check if the input object is standing on anything including the ground.
 const standingOnObject = (character) => { //checks if the object is standing on an object
 	if(character.y + character.height >= groundLevel) {
-    character.velocity = 0;
+    character.yVelocity = 0;
     character.y = 335;
     jumpCount = 0;
 		return true
@@ -208,35 +210,15 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
     rightKeyPress = true;
   } else if(event.keyCode == 37) {
     leftKeyPress = true;
-  } else if(event.keyCode == 38) {
-    upKeyPress = true;
-  }
+  } 
+
   // up 38
   if(event.keyCode == 38 && jumpCount < 2) {//&& jumpPress < 2) {    //listens for up press
   	//console.log('got up key')
-    jumpCount++
     upKeyPress = true;
-    mainPlayer.y -= 150; //the player jumps 150 px
+    mainPlayer.yVelocity = -7;
+    //mainPlayer.y -= 150; //the player jumps 150 px
   }
-
-  // // down 40 - no need
-  // // if(event.keyCode == 40 && mainPlayer.y + mainPlayer.height < canvas.height) {
-  // //   mainPlayer.y += 20; // you may want to use a val much higher than 1
-  // // }
-
-  // // left 37
-  // if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
-  //   leftKeyPress = true;
-  //   mainPlayer.x -= 10; // the player moves 20px to the left
-  //   // xPosition -= 20;
-  // }
-
-  // // right 39
-  // if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-  //   rightKeyPress = true;
-  //   mainPlayer.x += 10; //moves character 20px to the right
-  //   // xPosition += 20;
-  // }
 })
 
 
@@ -248,9 +230,16 @@ const movePlayer = () => {
   }
 
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
-    leftKeyPress = true;
     mainPlayer.x -= 2.5; // the player moves 20px to the left
-    xPosition -= 1;
+    // xPosition -= .25;
+  }
+
+  if(upKeyPress == true) {
+    // jumpTick++;
+    console.log(mainPlayer.yVelocity);
+    mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity;
+    standingOnObject(mainPlayer);
+
   }
 
 }
@@ -259,7 +248,8 @@ const movePlayer = () => {
 document.addEventListener('keyup', (event) => {
   if(event.keyCode == 38) {
     upKeyPress = false;
-    console.log('KeyUp pressed')
+    jumpTick = 0;
+    jumpCount++;
   }
 
   if(event.keyCode == 37) {
@@ -277,11 +267,11 @@ document.addEventListener('keyup', (event) => {
 //checks if character is on ground
 //
 function animateCanvas() {
+  movePlayer();
 	gravity(mainPlayer);
-
   xPosition += gameSpeed;
   moveEnemies();
-  movePlayer();
+  
  	clearCanvas();
   mainPlayer.draw();
   wall.draw();
@@ -289,14 +279,15 @@ function animateCanvas() {
   //console.log(xPosition);
   // pass this function into animate 
   if(pause || check){
-    return true
+    gameOver = true;
+    return
   }
   window.requestAnimationFrame(animateCanvas)
 
 }
 
 
-const gameOver = animateCanvas();
+animateCanvas();
 
 
 if(gameOver) {
