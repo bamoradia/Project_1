@@ -203,6 +203,14 @@ const checkForInterference = () => {
 
 document.addEventListener('keydown', (event) => {//event listener on keypresses
 
+
+  if(event.keyCode == 39) {
+    rightKeyPress = true;
+  } else if(event.keyCode == 37) {
+    leftKeyPress = true;
+  } else if(event.keyCode == 38) {
+    upKeyPress = true;
+  }
   // up 38
   if(event.keyCode == 38 && jumpCount < 2) {//&& jumpPress < 2) {    //listens for up press
   	//console.log('got up key')
@@ -211,32 +219,55 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
     mainPlayer.y -= 150; //the player jumps 150 px
   }
 
-  // down 40 - no need
-  // if(event.keyCode == 40 && mainPlayer.y + mainPlayer.height < canvas.height) {
-  //   mainPlayer.y += 20; // you may want to use a val much higher than 1
+  // // down 40 - no need
+  // // if(event.keyCode == 40 && mainPlayer.y + mainPlayer.height < canvas.height) {
+  // //   mainPlayer.y += 20; // you may want to use a val much higher than 1
+  // // }
+
+  // // left 37
+  // if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
+  //   leftKeyPress = true;
+  //   mainPlayer.x -= 10; // the player moves 20px to the left
+  //   // xPosition -= 20;
   // }
 
-  // left 37
-  if(event.keyCode == 37 && mainPlayer.x > 0) { //listens for the left press
-    leftKeyPress = true;
-    mainPlayer.x -= 10; // the player moves 20px to the left
-    // xPosition -= 20;
-  }
-
-  // right 39
-  if(event.keyCode == 39 && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-    rightKeyPress = true;
-    mainPlayer.x += 10; //moves character 20px to the right
-    // xPosition += 20;
-  }
+  // // right 39
+  // if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
+  //   rightKeyPress = true;
+  //   mainPlayer.x += 10; //moves character 20px to the right
+  //   // xPosition += 20;
+  // }
 })
 
+
+
+const movePlayer = () => {
+  if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
+    mainPlayer.x += 2.5; //moves character 20px to the right
+    // xPosition += 20;
+  }
+
+  if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
+    leftKeyPress = true;
+    mainPlayer.x -= 2.5; // the player moves 20px to the left
+    xPosition -= 1;
+  }
+
+}
 
 
 document.addEventListener('keyup', (event) => {
   if(event.keyCode == 38) {
     upKeyPress = false;
     console.log('KeyUp pressed')
+  }
+
+  if(event.keyCode == 37) {
+    leftKeyPress = false;
+  }
+
+  if(event.keyCode == 39) {
+    rightKeyPress = false;
   }
 })
 
@@ -250,6 +281,7 @@ function animateCanvas() {
 
   xPosition += gameSpeed;
   moveEnemies();
+  movePlayer();
  	clearCanvas();
   mainPlayer.draw();
   wall.draw();
