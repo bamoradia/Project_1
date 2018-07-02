@@ -149,8 +149,8 @@ const gravity = (object) => {
 const standingOnObject = (character) => { //checks if the object is standing on an object
   for(let i = 0; i < allObstacles.length; i++) {
    //checking if player is standing ontop of an obstacle
-    if(character.y + character.height <= allObstacles[i].y + 3 && //
-      character.y + character.height >= allObstacles[i].y - 3 &&
+    if(character.y + character.height <= allObstacles[i].y + 10 && //
+      character.y + character.height >= allObstacles[i].y - 5 &&
       character.x < allObstacles[i].x + allObstacles[i].width &&
       character.x + character.width > allObstacles[i].x) {
     character.yVelocity = 0; //set the character's yVelocity to 0
@@ -206,13 +206,21 @@ const checkForInterference = () => {
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
       mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
       mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
-      mainPlayer.x + mainPlayer.width < allObstacles[i].x + 3 &&
+      mainPlayer.x + mainPlayer.width < allObstacles[i].x + 6 &&
       mainPlayer.x + mainPlayer.width > allObstacles[i].x -3 &&
       leftKeyPress == false) {
 
-      console.log('got in here')
+      mainPlayer.x = allObstacles[i].x - mainPlayer.width - 3;
 
-      mainPlayer.x = allObstacles[i].x - mainPlayer.width;
+    } else if ((mainPlayer.y >= allObstacles[i].y && 
+      mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
+      mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
+      mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
+      mainPlayer.x < allObstacles[i].x + allObstacles[i].width + 3 &&
+      mainPlayer.x > allObstacles[i].x + allObstacles[i].width - 3 && 
+      rightKeyPress == false)
+    {
+      mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3;
     }
 }  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference with enemies
