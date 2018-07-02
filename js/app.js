@@ -45,7 +45,25 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
   },
 }
 
-mainPlayer.draw();//draw the main character for the first time
+//mainPlayer.draw();//draw the main character for the first time
+
+
+const trialPlayer = {
+  position: [200, groundLevel - 40, 25, 40],
+  desiredPosition: [200, groundLevel - 40, 40, 25],
+  yVelocity: 0, 
+  xVelocity: 0,
+  angle: 0,
+  draw() {
+    ctx.beginPath();
+    ctx.rect(this.position[0], this.position[1], this.position[2], this.position[3]);
+    ctx.fillStyle = 'blue';
+    ctx.fill();
+    ctx.closePath(); 
+  }
+}
+
+trialPlayer.draw();
 
 
 class Enemy {//enemy Class, will be used to make multiple enemies
@@ -54,7 +72,8 @@ class Enemy {//enemy Class, will be used to make multiple enemies
     this.y = 345;
     this.width = 20; 
     this.height =  30;
-    this.velocity =  0;
+    this.yVelocity =  0;
+    this.xVelocity = -0.2;
   }
   draw() {
     ctx.beginPath();
@@ -87,6 +106,9 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   // this will erase the entire canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   groundImage.onload();
+  for(let i = 0; i < allEnemies.length; i++) {
+    allEnemies[i].draw();
+  }
   
 }
 
@@ -126,6 +148,12 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 	} else {
 		return false
 	}
+}
+
+const moveEnemies = () => {
+  for(let i = 0; i < allEnemies.length; i++) {
+    allEnemies[i].x = allEnemies[i].x - gameSpeed + allEnemies[i].xVelocity;
+  }
 }
 
 
@@ -176,7 +204,7 @@ const checkForInterference = () => {
 document.addEventListener('keydown', (event) => {//event listener on keypresses
 
   // up 38
-  if(event.keyCode == 38 && jumpCount < 2){//&& jumpPress < 2) {    //listens for up press
+  if(event.keyCode == 38 && jumpCount < 2) {//&& jumpPress < 2) {    //listens for up press
   	//console.log('got up key')
     jumpCount++
     upKeyPress = true;
@@ -221,9 +249,9 @@ function animateCanvas() {
 	gravity(mainPlayer);
 
   xPosition += gameSpeed;
+  moveEnemies();
  	clearCanvas();
   mainPlayer.draw();
-  gumba.draw();
   wall.draw();
   const check = checkForInterference();
   //console.log(xPosition);
