@@ -175,30 +175,48 @@ const checkForInterference = () => {
     const gumbaR = enemy.x + enemy.width;
     const gumbaU = enemy.y;
     const gumbaD = enemy.y + enemy.height;
-  
-    //console.log(enemyL, enemyR, enemyU, enemyD, marioL, marioR, marioU, marioD)
-    // console.log(enemyL > marioL);
-    // console.log(enemyL < marioR);
-    // console.log(enemyD > marioD);
-    // console.log(enemyD < marioU);
-  
-    if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU) {
-      console.log("Enemy DL corner is in mario's box");
-      return true
-    } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU  ) {
-      console.log("Enemy DR corner is in mario's box");
-      return true
-    } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
-      console.log("Enemy UR corner is in mario's box");
-      return true
-    } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
-      console.log("Enemy UL corner is in mario's box");
-      return true
-    }
-    return false
-  }
-}
 
+    //console.log(mainPlayer.y + mainPlayer.height < enemy.y)
+    if(mainPlayer.y + mainPlayer.height-5 < enemy.y) {
+      if(enemy.x < mainPlayer.x + mainPlayer.width &&
+        enemy.x + enemy.width > mainPlayer.x &&
+        enemy.y < mainPlayer.y + mainPlayer.height &&
+        enemy.height + enemy.y > mainPlayer.y) {
+        console.log('got in here')
+        allEnemies.splice(i, 1);
+        //console.log("Enemy DL corner is in mario's box");
+        return 'mario wins'
+      }
+    } else {
+        //console.log('got in here')
+        if(enemy.x < mainPlayer.x + mainPlayer.width &&
+          enemy.x + enemy.width > mainPlayer.x &&
+          enemy.y < mainPlayer.y + mainPlayer.height &&
+          enemy.height + enemy.y > mainPlayer.y) {
+          //console.log("Enemy DL corner is in mario's box");
+          return true
+      }
+    }
+  }
+      // } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaD < mainPlayerD && gumbaD > mainPlayerU  ) {
+      //   console.log("Enemy DR corner is in mario's box");
+      //   return true
+      // } else if(gumbaR > mainPlayerL && gumbaR < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
+      //   console.log("Enemy UR corner is in mario's box");
+      //   return true
+      // } else if(gumbaL > mainPlayerL && gumbaL < mainPlayerR && gumbaU < mainPlayerD && gumbaU > mainPlayerU  ) {
+      //   console.log("Enemy UL corner is in mario's box");
+      //   return true
+      // }
+      return false
+}
+  
+
+
+
+const topCheck = () => {
+  
+}
 
 
 document.addEventListener('keydown', (event) => {//event listener on keypresses
@@ -268,15 +286,17 @@ function animateCanvas() {
   movePlayer(); //move player
 	gravity(mainPlayer); //gravity's affect on the player
   xPosition += gameSpeed;//move the position of the background
-  moveEnemies();//move all enemies
+  //moveEnemies();//move all enemies
   
  	clearCanvas();//clear the canvas
   const check = checkForInterference();//check for interference between main player and any enemies
   //console.log(xPosition);
   // pass this function into animate 
-  if(pause || check){ //if pause or enemy interference clear the animation function
+  if(pause || check == true){ //if pause or enemy interference clear the animation function
     gameOver = true;
     return
+  } else if (check == 'mario wins') {
+    console.log('Mario won!')
   }
   window.requestAnimationFrame(animateCanvas)
 
