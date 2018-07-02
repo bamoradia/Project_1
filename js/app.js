@@ -37,6 +37,7 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
 	y: groundLevel - 40, 
 	width: 25, 
   yVelocity: 0,
+  lastY: 335, //tracks the Y direction that mario is currently going
 	draw(){//redraw the main character
 		ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
@@ -132,6 +133,7 @@ const gravity = (object) => {
 		//do nothing
 	} else {
      object.yVelocity += 0.45;//the "acceleration" due to gravity
+     object.lastY = object.y;
      object.y = object.y + object.yVelocity; //update the position of the player after gravity 
       //the velocity of the object increases every tick
 	}
@@ -175,9 +177,10 @@ const checkForInterference = () => {
     const gumbaR = enemy.x + enemy.width;
     const gumbaU = enemy.y;
     const gumbaD = enemy.y + enemy.height;
+    console.log(mainPlayer.lastY, mainPlayer.y);
 
     //console.log(mainPlayer.y + mainPlayer.height < enemy.y)
-    if(mainPlayer.y + mainPlayer.height-5 < enemy.y) {
+    if(mainPlayer.lastY < mainPlayer.y /* && mainPlayer.y + mainPlayer.height - 2 < enemy.y*/) {
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
         enemy.y < mainPlayer.y + mainPlayer.height &&
@@ -254,6 +257,7 @@ const movePlayer = () => {
 
   if(upKeyPress == true) {
     // jumpTick++;
+    mainPlayer.lastY = mainPlayer.y;
     mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity; //update the player's position based on the velocity
     standingOnObject(mainPlayer);
 
