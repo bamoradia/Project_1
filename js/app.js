@@ -5,7 +5,7 @@ const canvas = document.getElementById('my-canvas');
 
 const groundLevel = 375; //setting most bottom layer of the 
 let xPosition = 0; //will be used to scroll the background image
-let gameSpeed = 0.75; //how fast the background image will scroll
+let gameSpeed = 2.5; //how fast the background image will scroll
 let pause = false; //set the pause condition as false initially
 let upKeyPress = false; //set up key press as false
 let rightKeyPress = false; // set right key press as false
@@ -112,8 +112,11 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   for(let i = 0; i < allEnemies.length; i++) { //draw all enemies as a part of clearing canvas
     allEnemies[i].draw();
   }
+
   for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
-    allObstacles[i].x = allObstacles[i].x - gameSpeed;
+      if(mainPlayer.moving) {
+        allObstacles[i].x = allObstacles[i].x - gameSpeed;
+      }
     allObstacles[i].draw();
   }
   mainPlayer.draw();//draw the main characeter
@@ -171,7 +174,7 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 const moveEnemies = () => { //function to move all enemies based on their xVelocity
   for(let i = 0; i < allEnemies.length; i++) {
     if(mainPlayer.moving) {//if player is moving the background
-      allEnemies[i].x = allEnemies[i].x - 2 + allEnemies[i].xVelocity; //add speed of background to enemy movement
+      allEnemies[i].x = allEnemies[i].x - gameSpeed + allEnemies[i].xVelocity; //add speed of background to enemy movement
     } else{
       allEnemies[i].x = allEnemies[i].x + allEnemies[i].xVelocity; //enemy movement if background is not moving
     }
@@ -266,15 +269,15 @@ const movePlayer = () => {
   if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
 
     if(mainPlayer.x > 200) { //if player is in the middle of the screen
-      xPosition += 2.5; //move the background intstead of the player
+      xPosition += gameSpeed; //move the background intstead of the player
       mainPlayer.moving = true;
     } else { //move the player not the background
-      mainPlayer.x += 2.5;
+      mainPlayer.x += gameSpeed;
     }
   }
 
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
-    mainPlayer.x -= 2.5; // the player moves 2.5px to the left
+    mainPlayer.x -= gameSpeed; // the player moves 2.5px to the left
     // xPosition -= .25;
   }
 
