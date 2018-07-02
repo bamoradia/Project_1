@@ -12,7 +12,8 @@ let rightKeyPress = false; // set right key press as false
 let leftKeyPress = false; // set left key press as false
 let jumpCount = 0; // set number of jumps as 0
 let gameOver = false; //set game over as false
-let enemyCount = 0;
+let enemyCount = 0; //used to only allow 1 new enemy during spawn point
+let score = 0; //keep track of user score
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -20,7 +21,7 @@ let groundImage = new Image(); //setting up ground image
 groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/world1_image.png';
 
 groundImage.onload = function () {//draw the ground image
-	ctx.drawImage(groundImage, xPosition, 200, canvas.width, 25, 0, 375, canvas.width, 25)
+	ctx.drawImage(groundImage, xPosition, 200, 600, 25, 0, 375, canvas.width, 25)
 }
 
 
@@ -90,11 +91,11 @@ class Enemy {//enemy Class, will be used to make multiple enemies
 
 
 class Obstacle {//class of obstacles to be called inside of another function
-  constructor (height) {
-    this.x = 300;
-    this.y = 345;
-    this.width = 20; 
-    this.height = 30; 
+  constructor (X, Y, width, height) {
+    this.x = X;
+    this.y = Y;
+    this.width = width; 
+    this.height = height; 
     this.yVelocity = 0;
   }
   draw () {
@@ -125,7 +126,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 
 
 const gumba = new Enemy();
-const wall = new Obstacle();
+const wall = new Obstacle(275, 345, 20, 30);
 
 allEnemies[0] = gumba; //add trial enemy to enemies array
 allObstacles[0] = wall; //add trial obstacle to obstacles array
@@ -246,7 +247,7 @@ const checkForInterference = () => {
         enemy.x + enemy.width > mainPlayer.x &&
         enemy.y < mainPlayer.y + mainPlayer.height &&
         enemy.height + enemy.y > mainPlayer.y) {
-
+        score += 100;
         allEnemies.splice(i, 1);
         return 'mario wins'
       }
@@ -310,6 +311,7 @@ const movePlayer = () => {
     if(mainPlayer.x > 200) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
       enemyCount = 0;
+      pipeCount = 0;
       mainPlayer.moving = true;
       mainPlayer.lastY = mainPlayer.y;
     } else { //move the player not the background
@@ -351,7 +353,24 @@ document.addEventListener('keyup', (event) => {
   }
 })
 
+const makeObstacles = () => {
+  const odds = Math.random();
 
+
+  if(odds < 0.25) {
+    const sizeOfPipe = Math.random();
+    if(sizeOfPipe < .6) {
+      const pipe = new Obstacle(600, 345, 30, 30);
+      allObstacles.push(pipe);
+      pipeCount++;
+    } else {
+      const pipe = new Obstacle(600, 280, 30, 95);
+      allObstacles.push(pipe);
+      pipeCount++;
+    }
+  }
+
+}
 //the main gameplay function
 //will house gravity conditions,
 //checks if character is on ground
@@ -374,6 +393,11 @@ function animateCanvas() {
     console.log('Mario won!')
   }
 
+
+  if(xPosition % 100 === 0 && xPosition != 0 && pipeCount < 1){
+    makeObstacles();
+  }
+
   if(xPosition % 250 === 0 && xPosition != 0 && enemyCount < 1){
     console.log('New Enemy Coming!')
     const gumba1 = new Enemy();
@@ -389,7 +413,7 @@ function animateCanvas() {
 animateCanvas();
 
 
-if(gameOver) {
+if(gameOver == true) {
   console.log('The game is over!')
 }
 
