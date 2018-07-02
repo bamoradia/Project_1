@@ -145,11 +145,11 @@ const gravity = (object) => {
 //function to check if the input object is standing on anything including the ground.
 const standingOnObject = (character) => { //checks if the object is standing on an object
   for(let i = 0; i < allObstacles.length; i++) {
-   // console.log(character.y + character.height, allObstacles[i].y)
-    if(character.y + character.height <= allObstacles[i].y && 
+   //checking if player is standing ontop of an obstacle
+    if(character.y + character.height <= allObstacles[i].y + 3 && //
+      character.y + character.height >= allObstacles[i].y - 3 &&
       character.x < allObstacles[i].x + allObstacles[i].width &&
       character.x + character.width > allObstacles[i].x) {
-      console.log('am in loop')
     character.yVelocity = 0; //set the character's yVelocity to 0
     character.y =  allObstacles[i].y - character.height; //draw the character to just above the ground
     jumpCount = 0; //reset the jump counter
@@ -170,10 +170,10 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 
 const moveEnemies = () => { //function to move all enemies based on their xVelocity
   for(let i = 0; i < allEnemies.length; i++) {
-    if(mainPlayer.moving) {
-      allEnemies[i].x = allEnemies[i].x - 2 + allEnemies[i].xVelocity;
+    if(mainPlayer.moving) {//if player is moving the background
+      allEnemies[i].x = allEnemies[i].x - 2 + allEnemies[i].xVelocity; //add speed of background to enemy movement
     } else{
-      allEnemies[i].x = allEnemies[i].x + allEnemies[i].xVelocity;     
+      allEnemies[i].x = allEnemies[i].x + allEnemies[i].xVelocity; //enemy movement if background is not moving
     }
   }
 }
@@ -183,8 +183,24 @@ const moveEnemies = () => { //function to move all enemies based on their xVeloc
 
 //need to adjust so that a top interference kills the enemy otherwise main character is killed
 const checkForInterference = () => {
+  for(let i = 0; i < allObstacles.length; i++) {
+    if((mainPlayer.y >= allObstacles[i].y && 
+      mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
+      mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
+      mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
+      mainPlayer.x + mainPlayer.width < allObstacles[i].x + 3 &&
+      mainPlayer.x + mainPlayer.width > allObstacles[i].x -3) {
 
-  for(let i = 0; i < allEnemies.length; i++) {
+      console.log('got in here')
+
+      mainPlayer.x = allObstacles[i].x - mainPlayer.width;
+    }
+  }
+
+
+
+
+  for(let i = 0; i < allEnemies.length; i++) {//checking interference with enemies
     const enemy = allEnemies[i];
 
     const mainPlayerL = mainPlayer.x;
@@ -200,7 +216,7 @@ const checkForInterference = () => {
     //console.log(mainPlayer.lastY, mainPlayer.y);
 
     //console.log(mainPlayer.y + mainPlayer.height < enemy.y)
-    if(mainPlayer.lastY < mainPlayer.y /* && mainPlayer.y + mainPlayer.height - 2 < enemy.y*/) {
+    if(mainPlayer.lastY < mainPlayer.y) {
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
         enemy.y < mainPlayer.y + mainPlayer.height &&
@@ -248,12 +264,11 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 //move player based on key presses
 const movePlayer = () => {
   if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
- //moves character 2.5px to the right
-    // xPosition += 20;
-    if(mainPlayer.x > 200) {
-      xPosition += 2.5;
+
+    if(mainPlayer.x > 200) { //if player is in the middle of the screen
+      xPosition += 2.5; //move the background intstead of the player
       mainPlayer.moving = true;
-    } else {
+    } else { //move the player not the background
       mainPlayer.x += 2.5;
     }
   }
@@ -265,7 +280,7 @@ const movePlayer = () => {
 
   if(upKeyPress == true) {
     // jumpTick++;
-    mainPlayer.lastY = mainPlayer.y;
+    mainPlayer.lastY = mainPlayer.y; //log the current y position as the last y position
     mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity; //update the player's position based on the velocity
     standingOnObject(mainPlayer);
 
