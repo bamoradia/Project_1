@@ -182,24 +182,39 @@ const moveEnemies = () => { //function to move all enemies based on their xVeloc
 }
 
 
+const clearEverything = () => {
+  for(let i = 0; i < allEnemies.length; i++) {
+    if(allEnemies[i].x + allEnemies[i].width <= 0) {
+      allEnemies.splice(i, 1);
+    } 
+  }
+
+  for(let i = 0; i < allObstacles.length; i++) {
+    if(allObstacles[i].x + allObstacles[i].width <= 0) {
+      allObstacles.splice(i, 1);
+    }
+  }
+}
+
+
 //function to check for interference between enemy object and main player. To be used for death condition for either character
 
 //need to adjust so that a top interference kills the enemy otherwise main character is killed
 const checkForInterference = () => {
-  for(let i = 0; i < allObstacles.length; i++) {
+  for(let i = 0; i < allObstacles.length; i++) {//checks for interference will all objects with main player
     if((mainPlayer.y >= allObstacles[i].y && 
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
       mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
       mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
       mainPlayer.x + mainPlayer.width < allObstacles[i].x + 3 &&
-      mainPlayer.x + mainPlayer.width > allObstacles[i].x -3) {
+      mainPlayer.x + mainPlayer.width > allObstacles[i].x -3 &&
+      leftKeyPress == false) {
 
       console.log('got in here')
 
       mainPlayer.x = allObstacles[i].x - mainPlayer.width;
     }
   }
-
 
 
 
@@ -323,6 +338,7 @@ function animateCanvas() {
   const check = checkForInterference();//check for interference between main player and any enemies
   //console.log(xPosition);
   // pass this function into animate 
+  clearEverything();
   if(pause || check == true){ //if pause or enemy interference clear the animation function
     gameOver = true;
     return
