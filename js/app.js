@@ -7,12 +7,11 @@ const groundLevel = 375; //setting most bottom layer of the
 let xPosition = 0; //will be used to scroll the background image
 let gameSpeed = 0.75; //how fast the background image will scroll
 let pause = false; //set the pause condition as false initially
-let upKeyPress = false;
-let rightKeyPress = false;
-let leftKeyPress = false;
-let jumpCount = 0;
-let jumpTick = 0;
-let gameOver = false;
+let upKeyPress = false; //set up key press as false
+let rightKeyPress = false; // set right key press as false
+let leftKeyPress = false; // set left key press as false
+let jumpCount = 0; // set number of jumps as 0
+let gameOver = false; //set game over as false
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -74,8 +73,8 @@ class Enemy {//enemy Class, will be used to make multiple enemies
     this.y = 345;
     this.width = 20; 
     this.height =  30;
-    this.yVelocity =  0;
-    this.xVelocity = -0.2;
+    this.yVelocity =  0; 
+    this.xVelocity = -0.2; //all enemies will move in relation to the background intially
   }
   draw() {
     ctx.beginPath();
@@ -108,22 +107,21 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   // this will erase the entire canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   groundImage.onload();
-  for(let i = 0; i < allEnemies.length; i++) {
+  for(let i = 0; i < allEnemies.length; i++) { //draw all enemies as a part of clearing canvas
     allEnemies[i].draw();
   }
+  for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
+    allObstacles[i].draw();
+  }
+  mainPlayer.draw();//draw the main characeter
 }
 
 
 const gumba = new Enemy();
 const wall = new Obstacle();
 
-allEnemies[0] = gumba;
-allObstacles[0] = wall;
-// ctx.beginPath();
-// ctx.rect(, this.y, this.width, this.height);
-// ctx.fillStyle = "brown";
-// ctx.fill();
-// ctx.closePath();
+allEnemies[0] = gumba; //add trial enemy to enemies array
+allObstacles[0] = wall; //add trial obstacle to obstacles array
 
 
 
@@ -134,7 +132,7 @@ const gravity = (object) => {
 		//do nothing
 	} else {
      object.yVelocity += 0.45;//the "acceleration" due to gravity
-     object.y = object.y + object.yVelocity;
+     object.y = object.y + object.yVelocity; //update the position of the player after gravity 
       //the velocity of the object increases every tick
 	}
 	return
@@ -142,17 +140,17 @@ const gravity = (object) => {
 
 //function to check if the input object is standing on anything including the ground.
 const standingOnObject = (character) => { //checks if the object is standing on an object
-	if(character.y + character.height >= groundLevel) {
-    character.yVelocity = 0;
-    character.y = 335;
-    jumpCount = 0;
+	if(character.y + character.height >= groundLevel) { 
+    character.yVelocity = 0; //set the character's yVelocity to 0
+    character.y = 335; //draw the character to just above the ground
+    jumpCount = 0; //reset the jump counter
 		return true
 	} else {
 		return false
 	}
 }
 
-const moveEnemies = () => {
+const moveEnemies = () => { //function to move all enemies based on their xVelocity
   for(let i = 0; i < allEnemies.length; i++) {
     allEnemies[i].x = allEnemies[i].x - gameSpeed + allEnemies[i].xVelocity;
   }
@@ -206,57 +204,57 @@ const checkForInterference = () => {
 document.addEventListener('keydown', (event) => {//event listener on keypresses
 
 
-  if(event.keyCode == 39) {
+  if(event.keyCode == 39) { //if right key is pressed set variable to true
     rightKeyPress = true;
-  } else if(event.keyCode == 37) {
+  } else if(event.keyCode == 37) {//if left key is pressed set variable to true
     leftKeyPress = true;
   } 
 
   // up 38
-  if(event.keyCode == 38 && jumpCount < 2) {//&& jumpPress < 2) {    //listens for up press
+  if(event.keyCode == 38 && jumpCount < 2) {//if up key is pressed and jump count is < 2 
   	//console.log('got up key')
     upKeyPress = true;
-    mainPlayer.yVelocity = -7;
+    if(mainPlayer.yVelocity < 7){ //set the yVelocity of the mainPlayer
+      mainPlayer.yVelocity = -7;
+    }
     //mainPlayer.y -= 150; //the player jumps 150 px
   }
 })
 
 
-
+//move player based on key presses
 const movePlayer = () => {
   if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-    mainPlayer.x += 2.5; //moves character 20px to the right
+    mainPlayer.x += 2.5; //moves character 2.5px to the right
     // xPosition += 20;
   }
 
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
-    mainPlayer.x -= 2.5; // the player moves 20px to the left
+    mainPlayer.x -= 2.5; // the player moves 2.5px to the left
     // xPosition -= .25;
   }
 
   if(upKeyPress == true) {
     // jumpTick++;
-    console.log(mainPlayer.yVelocity);
-    mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity;
+    mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity; //update the player's position based on the velocity
     standingOnObject(mainPlayer);
 
   }
 
 }
 
-
+//add event listener for key up press
 document.addEventListener('keyup', (event) => {
-  if(event.keyCode == 38) {
+  if(event.keyCode == 38) { //turn keypress holder off on up key
     upKeyPress = false;
-    jumpTick = 0;
     jumpCount++;
   }
 
-  if(event.keyCode == 37) {
+  if(event.keyCode == 37) {//turn keypress holder off on left key
     leftKeyPress = false;
   }
 
-  if(event.keyCode == 39) {
+  if(event.keyCode == 39) {//turn keypress holder off on right key
     rightKeyPress = false;
   }
 })
@@ -267,18 +265,16 @@ document.addEventListener('keyup', (event) => {
 //checks if character is on ground
 //
 function animateCanvas() {
-  movePlayer();
-	gravity(mainPlayer);
-  xPosition += gameSpeed;
-  moveEnemies();
+  movePlayer(); //move player
+	gravity(mainPlayer); //gravity's affect on the player
+  xPosition += gameSpeed;//move the position of the background
+  moveEnemies();//move all enemies
   
- 	clearCanvas();
-  mainPlayer.draw();
-  wall.draw();
-  const check = checkForInterference();
+ 	clearCanvas();//clear the canvas
+  const check = checkForInterference();//check for interference between main player and any enemies
   //console.log(xPosition);
   // pass this function into animate 
-  if(pause || check){
+  if(pause || check){ //if pause or enemy interference clear the animation function
     gameOver = true;
     return
   }
