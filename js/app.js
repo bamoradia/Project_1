@@ -6,7 +6,11 @@ const canvas = document.getElementById('my-canvas');
 const groundLevel = 375; //setting most bottom layer of the 
 let xPosition = 0; //will be used to scroll the background image
 let gameSpeed = 0.75; //how fast the background image will scroll
-let pause = false;
+let pause = false; //set the pause condition as false initially
+let upKeyPress = false;
+let rightKeyPress = false;
+let leftKeyPress = false;
+let jumpCount = 0;
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -117,6 +121,7 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 	if(character.y + character.height >= groundLevel) {
     character.velocity = 0;
     character.y = 335;
+    jumpCount = 0;
 		return true
 	} else {
 		return false
@@ -171,8 +176,10 @@ const checkForInterference = () => {
 document.addEventListener('keydown', (event) => {//event listener on keypresses
 
   // up 38
-  if(event.keyCode == 38 ){//&& jumpPress < 2) {    //listens for up press
+  if(event.keyCode == 38 && jumpCount < 2){//&& jumpPress < 2) {    //listens for up press
   	//console.log('got up key')
+    jumpCount++
+    upKeyPress = true;
     mainPlayer.y -= 150; //the player jumps 150 px
   }
 
@@ -183,17 +190,27 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 
   // left 37
   if(event.keyCode == 37 && mainPlayer.x > 0) { //listens for the left press
+    leftKeyPress = true;
     mainPlayer.x -= 10; // the player moves 20px to the left
     // xPosition -= 20;
   }
 
   // right 39
   if(event.keyCode == 39 && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
+    rightKeyPress = true;
     mainPlayer.x += 10; //moves character 20px to the right
     // xPosition += 20;
   }
 })
 
+
+
+document.addEventListener('keyup', (event) => {
+  if(event.keyCode == 38) {
+    upKeyPress = false;
+    console.log('KeyUp pressed')
+  }
+})
 
 
 //the main gameplay function
