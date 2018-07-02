@@ -52,25 +52,6 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
 
 mainPlayer.draw();//draw the main character for the first time
 
-
-// const trialPlayer = {
-//   position: [200, groundLevel - 40, 25, 40],
-//   desiredPosition: [200, groundLevel - 40, 40, 25],
-//   yVelocity: 0, 
-//   xVelocity: 0,
-//   angle: 0,
-//   draw() {
-//     ctx.beginPath();
-//     ctx.rect(this.position[0], this.position[1], this.position[2], this.position[3]);
-//     ctx.fillStyle = 'blue';
-//     ctx.fill();
-//     ctx.closePath(); 
-//   }
-// }
-
-// trialPlayer.draw();
-
-
 class Enemy {//enemy Class, will be used to make multiple enemies
 	constructor() {
     this.x = 400; 
@@ -83,7 +64,7 @@ class Enemy {//enemy Class, will be used to make multiple enemies
   draw() {
     ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "brown";
+    ctx.fillStyle = "yellow";
     ctx.fill();
     ctx.closePath();
   }
@@ -91,7 +72,7 @@ class Enemy {//enemy Class, will be used to make multiple enemies
 
 
 class Obstacle {//class of obstacles to be called inside of another function
-  constructor (X, Y, width, height) {
+  constructor (X, Y, width, height) {//obstacle requires inputs to instantiate
     this.x = X;
     this.y = Y;
     this.width = width; 
@@ -101,7 +82,7 @@ class Obstacle {//class of obstacles to be called inside of another function
   draw () {
     ctx.beginPath();
     ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "yellow";
+    ctx.fillStyle = "brown";
     ctx.fill();
     ctx.closePath(); 
   }
@@ -128,8 +109,8 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 const gumba = new Enemy();
 const wall = new Obstacle(275, 345, 20, 30);
 
-allEnemies[0] = gumba; //add trial enemy to enemies array
-allObstacles[0] = wall; //add trial obstacle to obstacles array
+allEnemies[0] = gumba; 
+allObstacles[0] = wall;
 
 
 
@@ -204,7 +185,7 @@ const clearEverything = () => {
 //need to adjust so that a top interference kills the enemy otherwise main character is killed
 const checkForInterference = () => {
   for(let i = 0; i < allObstacles.length; i++) {//checks for interference will all objects with main player
-    if((mainPlayer.y >= allObstacles[i].y && 
+    if((mainPlayer.y >= allObstacles[i].y && //checks interference on left edge with player
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
       mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
       mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
@@ -214,7 +195,7 @@ const checkForInterference = () => {
 
       mainPlayer.x = allObstacles[i].x - mainPlayer.width - 3;
 
-    } else if ((mainPlayer.y >= allObstacles[i].y && 
+    } else if ((mainPlayer.y >= allObstacles[i].y &&  //checks interference on right edge with player
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
       mainPlayer.y + mainPlayer.height >= allObstacles[i].y &&
       mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
@@ -225,7 +206,7 @@ const checkForInterference = () => {
       mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3;
     }
 }  
-  for(let i = 0; i < allEnemies.length; i++) {//checking interference with enemies
+  for(let i = 0; i < allEnemies.length; i++) {//checking interference between player and enemies
     const enemy = allEnemies[i];
 
     const mainPlayerL = mainPlayer.x;
@@ -353,11 +334,12 @@ document.addEventListener('keyup', (event) => {
   }
 })
 
+//function to randomly add obstacles to the map
 const makeObstacles = () => {
   const odds = Math.random();
 
 
-  if(odds < 0.25) {
+  if(odds < 0.25) {//make pipes
     const sizeOfPipe = Math.random();
     if(sizeOfPipe < .6) {
       const pipe = new Obstacle(600, 345, 30, 30);
@@ -368,6 +350,19 @@ const makeObstacles = () => {
       allObstacles.push(pipe);
       pipeCount++;
     }
+  } else if( odds < .75) {//make floating blocks
+    console.log('making block')
+    let blockCount = 1
+    const block = new Obstacle(600, 250, 25, 25);
+    allObstacles.push(block);
+    let blockGroupOdds = Math.random();
+    while(blockGroupOdds < 0.4) {//make groups of blocks
+      const block1 = new Obstacle(600+25*blockCount, 250, 25, 25)
+      allObstacles.push(block1);
+      blockCount++;
+      blockGroupOdds = Math.random();
+    }
+
   }
 
 }
@@ -399,7 +394,6 @@ function animateCanvas() {
   }
 
   if(xPosition % 250 === 0 && xPosition != 0 && enemyCount < 1){
-    console.log('New Enemy Coming!')
     const gumba1 = new Enemy();
     gumba1.x = 610;
     allEnemies.push(gumba1)
