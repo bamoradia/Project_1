@@ -123,10 +123,10 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 }
 
 
-//const gumba = new Enemy();
+const gumba = new Enemy();
 const wall = new Obstacle();
 
-//allEnemies[0] = gumba; //add trial enemy to enemies array
+allEnemies[0] = gumba; //add trial enemy to enemies array
 allObstacles[0] = wall; //add trial obstacle to obstacles array
 
 
@@ -158,8 +158,8 @@ const standingOnObject = (character) => { //checks if the object is standing on 
     jumpCount = 0; //reset the jump counter
     return true
     }
-  }
 
+  }
 
 	if(character.y + character.height >= groundLevel) { 
     character.yVelocity = 0; //set the character's yVelocity to 0
@@ -214,10 +214,7 @@ const checkForInterference = () => {
 
       mainPlayer.x = allObstacles[i].x - mainPlayer.width;
     }
-  }
-
-
-
+}  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference with enemies
     const enemy = allEnemies[i];
 
@@ -231,30 +228,48 @@ const checkForInterference = () => {
     const gumbaR = enemy.x + enemy.width;
     const gumbaU = enemy.y;
     const gumbaD = enemy.y + enemy.height;
-    //console.log(mainPlayer.lastY, mainPlayer.y);
 
-    //console.log(mainPlayer.y + mainPlayer.height < enemy.y)
+
+    //checking if player is attacking from on top of enemy and there is interference
     if(mainPlayer.lastY < mainPlayer.y) {
+
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
         enemy.y < mainPlayer.y + mainPlayer.height &&
         enemy.height + enemy.y > mainPlayer.y) {
+
         allEnemies.splice(i, 1);
-        //console.log("Enemy DL corner is in mario's box");
         return 'mario wins'
       }
-    } else {
-        //console.log('got in here')
+    } else {//if not attacking from the top check again to make sure there is interference
         if(enemy.x < mainPlayer.x + mainPlayer.width &&
           enemy.x + enemy.width > mainPlayer.x &&
           enemy.y < mainPlayer.y + mainPlayer.height &&
           enemy.height + enemy.y > mainPlayer.y) {
-          //console.log("Enemy DL corner is in mario's box");
+
+          console.log('player should be dead');
           return true
       }
     }
-  }
 
+
+    for(let j = 0; j < allObstacles.length; j++) {
+      //Checking interference between obstacles and enemies
+      //if interference, change the direction of enemy travel
+      if(allObstacles[j].y + allObstacles[j].height == allEnemies[i].y + allEnemies[i].height &&
+      allEnemies[i].x < allObstacles[j].x + allObstacles[j].width + 1 &&
+      allEnemies[i].x > allObstacles[j].x + allObstacles[j].width - 1) {
+
+        allEnemies[i].xVelocity = -allEnemies[i].xVelocity;
+
+      } else if(allObstacles[j].y + allObstacles[j].height == allEnemies[i].y + allEnemies[i].height &&
+      allEnemies[i].x + allEnemies[i].width < allObstacles[j].x + 1 &&
+      allEnemies[i].x + allEnemies[i].width > allObstacles[j].x -1) {
+
+        allEnemies[i].xVelocity = -allEnemies[i].xVelocity
+      }
+    }
+  }
       return false
 }
   
@@ -286,13 +301,16 @@ const movePlayer = () => {
     if(mainPlayer.x > 200) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
       mainPlayer.moving = true;
+      mainPlayer.lastY = mainPlayer.y;
     } else { //move the player not the background
       mainPlayer.x += gameSpeed;
+      mainPlayer.lastY = mainPlayer.y;
     }
   }
 
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
     mainPlayer.x -= gameSpeed; // the player moves 2.5px to the left
+    mainPlayer.lastY = mainPlayer.y;
     // xPosition -= .25;
   }
 
