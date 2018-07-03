@@ -36,7 +36,6 @@ let pipeImage = new Image();
 pipeImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/blocks_sheet.png';
 
 pipeImage.onload = function (X, Y, width, height) {//draw block image
-  console.log(width)
   ctx.drawImage(pipeImage, 0, 160, 32, 32, X, Y, width, height);
 }
 
@@ -108,13 +107,14 @@ class Obstacle {//class of obstacles to be called inside of another function
     this.type = type;
   }
   draw () {
-    ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "brown";
-    ctx.fill();
-    ctx.closePath(); 
     if(this.type === 'largePipe' || this.type === 'smallPipe') {
       pipeImage.onload(this.x, this.y, this.width, this.height);
+    } else if(this.type !== 'largePipe' || this.type !== 'smallPipe') {
+      ctx.beginPath();
+      ctx.rect(this.x, this.y, this.width, this.height);
+      ctx.fillStyle = "brown";
+      ctx.fill();
+      ctx.closePath(); 
     }
   }
   drawCoin() {
@@ -142,9 +142,9 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   }
 
   for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
-      if(mainPlayer.moving) {
-        allObstacles[i].x = allObstacles[i].x - gameSpeed;
-      }
+    if(mainPlayer.moving) {
+      allObstacles[i].x = allObstacles[i].x - gameSpeed;
+    }
     allObstacles[i].draw();
     allObstacles[i].drawCoin();
     allObstacles[i].drawBlock();
@@ -155,7 +155,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
 
 
 const gumba = new Enemy();
-const wall = new Obstacle(275, 345, 20, 30);
+const wall = new Obstacle(275, 345, 20, 30, false, '', 'smallPipe');
 
 allEnemies[0] = gumba; 
 allObstacles[0] = wall;
@@ -256,7 +256,7 @@ const checkForInterference = () => {
     } else {
       allowMoveRight = true;
     }
-}  
+  }  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference between player and enemies
     const enemy = allEnemies[i];
 
@@ -332,13 +332,12 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
   } 
 
   // up 38
-  if(event.keyCode == 38 && jumpCount < 2) {//if up key is pressed and jump count is < 2 
-  	//console.log('got up key')
+  if(event.keyCode == 38 && jumpCount < 3) {//if up key is pressed and jump count is < 2 
     upKeyPress = true;
     if(mainPlayer.yVelocity < 7){ //set the yVelocity of the mainPlayer
       mainPlayer.yVelocity = -7;
+      jumpCount++;
     }
-    //mainPlayer.y -= 150; //the player jumps 150 px
   }
 })
 
@@ -346,8 +345,7 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 //move player based on key presses
 const movePlayer = () => {
   if(rightKeyPress === true && allowMoveRight && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
-
-    if(mainPlayer.x > 200) { //if player is in the middle of the screen
+    if(mainPlayer.x > 250) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
       enemyCount = 0;
       pipeCount = 0;
@@ -362,11 +360,9 @@ const movePlayer = () => {
   if(leftKeyPress == true && mainPlayer.x > 0) { //listens for the left press
     mainPlayer.x -= gameSpeed; // the player moves 2.5px to the left
     mainPlayer.lastY = mainPlayer.y;
-    // xPosition -= .25;
   }
 
   if(upKeyPress == true) {
-    // jumpTick++;
     mainPlayer.lastY = mainPlayer.y; //log the current y position as the last y position
     mainPlayer.y = mainPlayer.y + mainPlayer.yVelocity; //update the player's position based on the velocity
     standingOnObject(mainPlayer);
@@ -404,12 +400,11 @@ const makeObstacles = () => {
       allObstacles.push(pipe);
       pipeCount++;
     } else {
-      const pipe = new Obstacle(600, 280, 30, 95, false, '', 'largePipe');//make large pipe
+      const pipe = new Obstacle(600, 280, 40, 95, false, '', 'largePipe');//make large pipe
       allObstacles.push(pipe);
       pipeCount++;
     }
   } else if( odds < .75) {//make floating blocks
-    //console.log('making block')
     let blockCount = 1
     const block = new Obstacle(600, 250, 25, 25);
     allObstacles.push(block);
@@ -431,12 +426,10 @@ const makeObstacles = () => {
 function animateCanvas() {
   movePlayer(); //move player
 	gravity(mainPlayer); //gravity's affect on the player
-  //xPosition += gameSpeed;//move the position of the background
   moveEnemies();//move all enemies
   
  	clearCanvas();//clear the canvas
   const check = checkForInterference();//check for interference between main player and any enemies
-  //console.log(xPosition);
   // pass this function into animate 
   clearEverything();
   if(pause || check == true){ //if pause or enemy interference clear the animation function
@@ -472,13 +465,10 @@ function animateCanvas() {
   } else if(score % 1000 != 0) {
     gameSpeedTracker = 0;
   }
-
   //reset the xposition to loop the background image
   if(xPosition >= 2792) {
     xPosition = 0;
   }
-
-  allObstacles[0].drawCoin()
   window.requestAnimationFrame(animateCanvas)
 
 }
