@@ -139,9 +139,6 @@ class Obstacle {//class of obstacles to be called inside of another function
       coinImage.onload(this.x, this.y);
     }
   }
-  drawPipe() {
-
-  }
   drawMushroom() {
 
   }
@@ -205,6 +202,11 @@ const standingOnObject = (character) => { //checks if the object is standing on 
       character.x + character.width > allObstacles[i].x) {
     character.yVelocity = 0; //set the character's yVelocity to 0
     character.y =  allObstacles[i].y - character.height - 1; //draw the character to just above the ground
+    if(allObstacles[i].hasItem === true && allObstacles[i].item === 'coin'){
+      score += 200;
+      $score.text(`Score: ${score}`)
+    }
+    allObstacles[i].hasItem = false;
     jumpCount = 0; //reset the jump counter
     return true
     }
