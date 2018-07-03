@@ -1,3 +1,17 @@
 canvas {
 	background-color: skyblue;
+	display: block;
 }
+
+div {
+	display: flex;
+	background-color: skyblue;
+	width: 600px;
+	justify-content: space-around;
+	font-family: 'Wendy One', sans-serif;
+	font-size: larger;
+	align-items: flex-end;
+
+}
+
+

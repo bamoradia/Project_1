@@ -14,6 +14,7 @@ let jumpCount = 0; // set number of jumps as 0
 let gameOver = false; //set game over as false
 let enemyCount = 0; //used to only allow 1 new enemy during spawn point
 let score = 0; //keep track of user score
+const $score = $('#score');
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -229,6 +230,7 @@ const checkForInterference = () => {
         enemy.y < mainPlayer.y + mainPlayer.height &&
         enemy.height + enemy.y > mainPlayer.y) {
         score += 100;
+        $score.text(`Score: ${score}`);
         allEnemies.splice(i, 1);
         return 'mario wins'
       }
@@ -398,6 +400,11 @@ function animateCanvas() {
     gumba1.x = 610;
     allEnemies.push(gumba1)
     enemyCount++;
+  }
+
+
+  if(xPosition >= 2792) {
+    xPosition = 0;
   }
   window.requestAnimationFrame(animateCanvas)
 
