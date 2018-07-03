@@ -32,6 +32,24 @@ groundImage.onload = function () {//draw the ground image
 }
 
 
+let pipeImage = new Image();
+pipeImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/blocks_sheet.png';
+
+pipeImage.onload = function (X, Y, width, height) {//draw block image
+  console.log(width)
+  ctx.drawImage(pipeImage, 0, 160, 32, 32, X, Y, width, height);
+}
+
+let coinImage = new Image();
+coinImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/items_sheet.png';
+
+let mushroomImage = new Image();
+mushroomImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/items_sheet.png';
+
+coinImage.onload = function (X, Y) {//draw the ground image
+  ctx.drawImage(coinImage, 3, 97, 15, 15, X, Y - 25, 30, 20) 
+}
+
 //make an array with all the current characters 
 const allChars = [];
 const allObstacles = [];
@@ -79,12 +97,15 @@ class Enemy {//enemy Class, will be used to make multiple enemies
 
 
 class Obstacle {//class of obstacles to be called inside of another function
-  constructor (X, Y, width, height) {//obstacle requires inputs to instantiate
+  constructor (X, Y, width, height, hasitem, item, type) {//obstacle requires inputs to instantiate
     this.x = X;
     this.y = Y;
     this.width = width; 
     this.height = height; 
     this.yVelocity = 0;
+    this.hasItem = hasitem;
+    this.item = item;
+    this.type = type;
   }
   draw () {
     ctx.beginPath();
@@ -92,6 +113,23 @@ class Obstacle {//class of obstacles to be called inside of another function
     ctx.fillStyle = "brown";
     ctx.fill();
     ctx.closePath(); 
+    if(this.type === 'largePipe' || this.type === 'smallPipe') {
+      pipeImage.onload(this.x, this.y, this.width, this.height);
+    }
+  }
+  drawCoin() {
+    if(this.hasItem === true && this.item == 'coin'){
+      coinImage.onload(this.x, this.y);
+    }
+  }
+  drawPipe() {
+
+  }
+  drawMushroom() {
+
+  }
+  drawBlock() {
+
   }
 }
 
@@ -108,6 +146,9 @@ function clearCanvas() {//clears the canvas and redraws the ground image
         allObstacles[i].x = allObstacles[i].x - gameSpeed;
       }
     allObstacles[i].draw();
+    allObstacles[i].drawCoin();
+    allObstacles[i].drawBlock();
+    allObstacles[i].drawMushroom();
   }
   mainPlayer.draw();//draw the main characeter
 }
@@ -359,11 +400,11 @@ const makeObstacles = () => {
   if(odds < 0.25) {//make pipes
     const sizeOfPipe = Math.random();
     if(sizeOfPipe < .6) {
-      const pipe = new Obstacle(600, 345, 30, 30);
+      const pipe = new Obstacle(600, 345, 30, 30, false, '', 'smallPipe');//make small pipe
       allObstacles.push(pipe);
       pipeCount++;
     } else {
-      const pipe = new Obstacle(600, 280, 30, 95);
+      const pipe = new Obstacle(600, 280, 30, 95, false, '', 'largePipe');//make large pipe
       allObstacles.push(pipe);
       pipeCount++;
     }
@@ -436,12 +477,14 @@ function animateCanvas() {
   if(xPosition >= 2792) {
     xPosition = 0;
   }
+
+  allObstacles[0].drawCoin()
   window.requestAnimationFrame(animateCanvas)
 
 }
 
 
-animateCanvas();
+ animateCanvas();
 
 
 if(gameOver == true) {
