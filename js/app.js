@@ -49,6 +49,13 @@ coinImage.onload = function (X, Y) {//draw the ground image
   ctx.drawImage(coinImage, 3, 97, 15, 15, X, Y - 25, 30, 20) 
 }
 
+let characterImage = new Image();
+characterImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/luigi_sprite_sheet.png';
+
+characterImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(characterImage, 210, 0, 15, 15, X, Y, width, height);
+}
+
 //make an array with all the current characters 
 const allChars = [];
 const allObstacles = [];
@@ -66,11 +73,12 @@ const mainPlayer = {//setting up x, y, height and width as well as yVelocity
   lastY: 335, //tracks the Y direction that mario is currently going
   moving: false,
 	draw(){//redraw the main character
-		ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "green";
-    ctx.fill();
-    ctx.closePath();
+		// ctx.beginPath();
+  //   ctx.rect(this.x, this.y, this.width, this.height);
+  //   ctx.fillStyle = "green";
+  //   ctx.fill();
+  //   ctx.closePath();
+  characterImage.onload(this.x, this.y, this.width, this.height);
   },
 }
 
