@@ -62,8 +62,12 @@ blockImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(blockImage, 20, 1, 15, 15, X, Y, width, height);
 }
 
+let enemyImage = new Image();
+enemyImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/enemy_sheet.png';
 
-blockImage.onload(40, 200, 50, 50);
+enemyImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(enemyImage, 0, 16, 17, 15, X, Y, width, height);
+}
 
 //make an array with all the current characters 
 const allChars = [];
@@ -103,11 +107,13 @@ class Enemy {//enemy Class, will be used to make multiple enemies
     this.xVelocity = -1; //all enemies will move in relation to the background intially
   }
   draw() {
-    ctx.beginPath();
-    ctx.rect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = "yellow";
-    ctx.fill();
-    ctx.closePath();
+    // ctx.beginPath();
+    // ctx.rect(this.x, this.y, this.width, this.height);
+    // ctx.fillStyle = "yellow";
+    // ctx.fill();
+    // ctx.closePath();
+    enemyImage.onload(this.x, this.y, this.width, this.height)
+
   }
 }
 
