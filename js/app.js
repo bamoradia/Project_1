@@ -15,6 +15,9 @@ let gameOver = false; //set game over as false
 let enemyCount = 0; //used to only allow 1 new enemy during spawn point
 let score = 0; //keep track of user score
 const $score = $('#score');
+let gameSpeedTracker = 0;
+let enemyDistance = 270;
+let obstacleDistance = 135;
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -240,6 +243,12 @@ const checkForInterference = () => {
           enemy.y < mainPlayer.y + mainPlayer.height &&
           enemy.height + enemy.y > mainPlayer.y) {
 
+          ctx.beginPath();
+          ctx.font= 'bold 34px Wendy';
+          ctx.fillStyle = "red";
+          ctx.fillText('YOU LOSE', 215, 200);
+          ctx.closePath();
+
           console.log('player should be dead');
           return true
       }
@@ -353,7 +362,7 @@ const makeObstacles = () => {
       pipeCount++;
     }
   } else if( odds < .75) {//make floating blocks
-    console.log('making block')
+    //console.log('making block')
     let blockCount = 1
     const block = new Obstacle(600, 250, 25, 25);
     allObstacles.push(block);
@@ -390,19 +399,30 @@ function animateCanvas() {
     console.log('Mario won!')
   }
 
-
-  if(xPosition % 100 === 0 && xPosition != 0 && pipeCount < 1){
+  //making obstacles at set intervals
+  if(Math.floor(xPosition) % obstacleDistance === 0 && xPosition != 0 && pipeCount < 1){
     makeObstacles();
   }
 
-  if(xPosition % 250 === 0 && xPosition != 0 && enemyCount < 1){
+  //making enemies at set intervals
+  if(Math.floor(xPosition) % enemyDistance === 0 && xPosition != 0 && enemyCount < 1){
     const gumba1 = new Enemy();
     gumba1.x = 610;
     allEnemies.push(gumba1)
     enemyCount++;
   }
 
+  //increase game speed at certain conditions
+  if((score % 1000 === 0) && (gameSpeedTracker < 1)) {
+    gameSpeed += .2;
+    gameSpeed = Math.floor(gameSpeed * 10) / 10;
+    gameSpeedTracker++;
+    xPosition = Math.floor(xPosition);
+  } else if(score % 1000 != 0) {
+    //gameSpeedTracker = 0;
+  }
 
+  //reset the xposition to loop the background image
   if(xPosition >= 2792) {
     xPosition = 0;
   }
