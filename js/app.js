@@ -158,7 +158,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   }
 
   for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
-    if(mainPlayer.moving ) {
+    if(mainPlayer.moving && leftKeyPress === false) {
       allObstacles[i].x = allObstacles[i].x - gameSpeed;
     }
     //draw all items/obstacles types
@@ -228,7 +228,7 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 
 const moveEnemies = () => { //function to move all enemies based on their xVelocity
   for(let i = 0; i < allEnemies.length; i++) {
-    if(mainPlayer.moving) {//if player is moving the background
+    if(mainPlayer.moving && leftKeyPress === false) {//if player is moving the background
       allEnemies[i].x = allEnemies[i].x - gameSpeed + allEnemies[i].xVelocity; //add speed of background to enemy movement
     } else{
       allEnemies[i].x = allEnemies[i].x + allEnemies[i].xVelocity; //enemy movement if background is not moving
