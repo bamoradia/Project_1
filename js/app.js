@@ -18,7 +18,6 @@ const $score = $('#score');
 let gameSpeedTracker = 0;
 let enemyDistance = 250;
 let obstacleDistance = 100;
-let allowMoveRight = true;
 const $button = $('#pause');
 
 
@@ -55,6 +54,16 @@ characterImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/spr
 characterImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(characterImage, 210, 0, 15, 15, X, Y, width, height);
 }
+
+let blockImage = new Image();
+blockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/blocks_sheet.png';
+
+blockImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(blockImage, 20, 1, 15, 15, X, Y, width, height);
+}
+
+
+blockImage.onload(40, 200, 50, 50);
 
 //make an array with all the current characters 
 const allChars = [];
@@ -117,12 +126,6 @@ class Obstacle {//class of obstacles to be called inside of another function
   draw () {
     if(this.type === 'largePipe' || this.type === 'smallPipe') {
       pipeImage.onload(this.x, this.y, this.width, this.height);
-    } else if(this.type !== 'largePipe' || this.type !== 'smallPipe') {
-      ctx.beginPath();
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.fillStyle = "brown";
-      ctx.fill();
-      ctx.closePath(); 
     }
   }
   drawCoin() {
@@ -137,7 +140,9 @@ class Obstacle {//class of obstacles to be called inside of another function
 
   }
   drawBlock() {
-
+    if(this.type === 'block') {
+      blockImage.onload(this.x, this.y, this.width, this.height);
+    }
   }
 }
 
@@ -150,7 +155,7 @@ function clearCanvas() {//clears the canvas and redraws the ground image
   }
 
   for(let i = 0; i < allObstacles.length; i++){//draw all obstacles as a part of clearing canvas
-    if(mainPlayer.moving) {
+    if(mainPlayer.moving ) {
       allObstacles[i].x = allObstacles[i].x - gameSpeed;
     }
     allObstacles[i].draw();
@@ -249,8 +254,8 @@ const checkForInterference = () => {
       mainPlayer.x + mainPlayer.width > allObstacles[i].x -3 &&
       leftKeyPress == false) {
 
+      mainPlayer.moving = false;
       mainPlayer.x = allObstacles[i].x - mainPlayer.width - 2;
-      allowMoveRight = false;
 
     } else if ((mainPlayer.y >= allObstacles[i].y &&  //checks interference on right edge with player
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
@@ -261,8 +266,6 @@ const checkForInterference = () => {
       rightKeyPress == false)
     {
       mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3;
-    } else {
-      allowMoveRight = true;
     }
   }  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference between player and enemies
@@ -352,7 +355,7 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 
 //move player based on key presses
 const movePlayer = () => {
-  if(rightKeyPress === true && allowMoveRight && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
+  if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
     if(mainPlayer.x > 250) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
       enemyCount = 0;
@@ -414,11 +417,11 @@ const makeObstacles = () => {
     }
   } else if( odds < .75) {//make floating blocks
     let blockCount = 1
-    const block = new Obstacle(600, 250, 25, 25);
+    const block = new Obstacle(600, 250, 25, 25, false, '', 'block');
     allObstacles.push(block);
     let blockGroupOdds = Math.random();
     while(blockGroupOdds < 0.4) {//make groups of blocks
-      const block1 = new Obstacle(600+25*blockCount, 250, 25, 25)
+      const block1 = new Obstacle(600+25*blockCount, 250, 25, 25, false, '', 'block')
       allObstacles.push(block1);
       blockCount++;
       blockGroupOdds = Math.random();
