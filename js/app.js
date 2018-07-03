@@ -19,6 +19,8 @@ let gameSpeedTracker = 0;
 let enemyDistance = 250;
 let obstacleDistance = 100;
 let allowMoveRight = true;
+const $button = $('#pause');
+
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -200,7 +202,6 @@ const checkForInterference = () => {
 
       mainPlayer.x = allObstacles[i].x - mainPlayer.width - 2;
       allowMoveRight = false;
-      console.log(allowMoveRight)
 
     } else if ((mainPlayer.y >= allObstacles[i].y &&  //checks interference on right edge with player
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
@@ -254,7 +255,7 @@ const checkForInterference = () => {
           ctx.fillText('YOU LOSE', 215, 200);
           ctx.closePath();
 
-          console.log('player should be dead');
+          $button.text('Restart Game');
           return true
       }
     }
@@ -398,7 +399,9 @@ function animateCanvas() {
   // pass this function into animate 
   clearEverything();
   if(pause || check == true){ //if pause or enemy interference clear the animation function
-    gameOver = true;
+    if(check === true) {
+      gameOver = true; 
+    }
     return
   } else if (check == 'mario wins') {
     console.log('Mario won!')
@@ -451,7 +454,15 @@ if(gameOver == true) {
 //remove for actual game
 $('#pause').on('click', (event) => {
   pause = !pause;
-  if(pause === false){
+
+  if(gameOver === true) {
+    location.reload();
+  } else if(pause === false){
+    $button.text('Pause Game');
     animateCanvas();
+  } else {
+    $button.text('Resume Game');
   }
+
+
 })
