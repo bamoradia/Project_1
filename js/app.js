@@ -16,8 +16,9 @@ let enemyCount = 0; //used to only allow 1 new enemy during spawn point
 let score = 0; //keep track of user score
 const $score = $('#score');
 let gameSpeedTracker = 0;
-let enemyDistance = 270;
-let obstacleDistance = 135;
+let enemyDistance = 250;
+let obstacleDistance = 100;
+let allowMoveRight = true;
 
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
@@ -197,7 +198,9 @@ const checkForInterference = () => {
       mainPlayer.x + mainPlayer.width > allObstacles[i].x -3 &&
       leftKeyPress == false) {
 
-      mainPlayer.x = allObstacles[i].x - mainPlayer.width - 3;
+      mainPlayer.x = allObstacles[i].x - mainPlayer.width - 2;
+      allowMoveRight = false;
+      console.log(allowMoveRight)
 
     } else if ((mainPlayer.y >= allObstacles[i].y &&  //checks interference on right edge with player
       mainPlayer.y <= allObstacles[i].y + allObstacles[i].height ||
@@ -208,6 +211,8 @@ const checkForInterference = () => {
       rightKeyPress == false)
     {
       mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3;
+    } else {
+      allowMoveRight = true;
     }
 }  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference between player and enemies
@@ -298,7 +303,7 @@ document.addEventListener('keydown', (event) => {//event listener on keypresses
 
 //move player based on key presses
 const movePlayer = () => {
-  if(rightKeyPress === true && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
+  if(rightKeyPress === true && allowMoveRight && mainPlayer.x + mainPlayer.width < canvas.width) { //listen for right press
 
     if(mainPlayer.x > 200) { //if player is in the middle of the screen
       xPosition += gameSpeed; //move the background intstead of the player
@@ -407,19 +412,21 @@ function animateCanvas() {
   //making enemies at set intervals
   if(Math.floor(xPosition) % enemyDistance === 0 && xPosition != 0 && enemyCount < 1){
     const gumba1 = new Enemy();
-    gumba1.x = 610;
+    gumba1.x = 650;
     allEnemies.push(gumba1)
     enemyCount++;
   }
 
   //increase game speed at certain conditions
-  if((score % 1000 === 0) && (gameSpeedTracker < 1)) {
-    gameSpeed += .2;
-    gameSpeed = Math.floor(gameSpeed * 10) / 10;
+  if((score % 1000 === 0) && score != 0 && (gameSpeedTracker < 1)) {
+    gameSpeed += .5;
+    // gameSpeed = Math.floor(gameSpeed * 10) / 10;
+    enemyDistance += 50;
+    obstacleDistance += 20;
     gameSpeedTracker++;
-    xPosition = Math.floor(xPosition);
+    xPosition = 0;
   } else if(score % 1000 != 0) {
-    //gameSpeedTracker = 0;
+    gameSpeedTracker = 0;
   }
 
   //reset the xposition to loop the background image
