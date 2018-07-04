@@ -18,6 +18,7 @@ const $score = $('#score');
 let gameSpeedTracker = 0; //count to make sure game speed is only increased once
 let enemyDistance = 250;//distance at which new enemies spawn
 let obstacleDistance = 100;//distance at which new obstacles may spawn
+let check = false;
 const $button = $('#pause');
 let highScores = [0];
 
@@ -491,6 +492,38 @@ const checkHighScore = () => {
 }
 
 
+const resetGame = () => {
+  xPosition = 0; //will be used to scroll the background image
+  gameSpeed = 2.5; //how fast the background image will scroll
+  pause = false; //set the pause condition as false initially
+  upKeyPress = false; //set up key press as false
+  rightKeyPress = false; // set right key press as false
+  leftKeyPress = false; // set left key press as false
+  jumpCount = 0; // set number of jumps as 0
+  gameOver = false; //set game over as false
+  enemyCount = 0; //used to only allow 1 new enemy during spawn point
+  score = 0; //keep track of user score
+  gameSpeedTracker = 0; //count to make sure game speed is only increased once
+  enemyDistance = 250;//distance at which new enemies spawn
+  obstacleDistance = 100;//distance at which new obstacles may spawn
+  check = false;
+  allObstacles.length = 0;
+  allEnemies.length = 0;;
+
+  mainPlayer.x = 200;
+  mainPlayer.height = 40;
+  mainPlayer.y = groundLevel - 40;
+  mainPlayer.width = 25;
+  mainPlayer.yVelocity = 0;
+  mainPlayer.lastY = 335;
+  mainPlayer.moving = false
+  mainPlayer.draw();
+
+  animateCanvas();
+
+}
+
+
 //the main gameplay function
 //will house gravity conditions,
 //checks if character is on ground
@@ -501,7 +534,7 @@ function animateCanvas() {
   moveEnemies();//move all enemies
   
  	clearCanvas();//clear the canvas
-  const check = checkForInterference();//check for interference between main player and any enemies
+  check = checkForInterference();//check for interference between main player and any enemies
   // pass this function into animate 
   clearEverything();
   if(pause || check == true){ //if pause or enemy interference clear the animation function
@@ -555,7 +588,7 @@ $('#pause').on('click', (event) => {
   pause = !pause;
 
   if(gameOver === true) {
-    location.reload();
+    resetGame();
   } else if(pause === false){
     $button.text('Pause Game');
     animateCanvas();
