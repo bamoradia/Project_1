@@ -19,6 +19,7 @@ let gameSpeedTracker = 0; //count to make sure game speed is only increased once
 let enemyDistance = 250;//distance at which new enemies spawn
 let obstacleDistance = 100;//distance at which new obstacles may spawn
 const $button = $('#pause');
+let highScores = [0];
 
 
 const ctx = canvas.getContext('2d'); //setting up canvas
@@ -216,6 +217,13 @@ const standingOnObject = (character) => { //checks if the object is standing on 
 
   }
 
+  //const checkForGround = canvas.getContext('2d').getImageData(mainPlayer.x, groundLevel, mainPlayer.width, 1)
+  //console.log(checkForGround);
+  // for(let i = mainPlayer.x; i < (mainPlayer.x + mainPlayer.width); i++) {
+
+  // }
+
+  //checking if character is at ground level
 	if(character.y + character.height >= groundLevel) { 
     character.yVelocity = 0; //set the character's yVelocity to 0
     character.y = 335; //draw the character to just above the ground
@@ -429,10 +437,10 @@ const makeObstacles = () => {
     const itemOdds = Math.random();
     let block;
     //make items based on random odds
-    if(itemOdds < 0.02) {
+    if(itemOdds < 0.1) {
       block = new Obstacle(600, 250, 25, 25, true, 'mushroom', 'block');
       console.log('made mushroom block')
-    } else if(itemOdds < 0.1){
+    } else if(itemOdds < 0.2){
       block = new Obstacle(600, 250, 25, 25, true, 'coin', 'block');
       console.log('made coin block')
     } else {
@@ -446,10 +454,10 @@ const makeObstacles = () => {
       console.log('made blockgroup')
       let block1
       const itemOdds1 = Math.random();
-      if(itemOdds1 < 0.005) {
+      if(itemOdds1 < 0.05) {
         block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'mushroom', 'block');
         console.log('made blockgroup mushroom')
-      } else if(itemOdds1 < 0.1){
+      } else if(itemOdds1 < 0.15){
         block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'coin', 'block');
         console.log('made blockgroup coin')
       } else {
@@ -464,6 +472,25 @@ const makeObstacles = () => {
   }
 
 }
+
+
+//check for high score function 
+const checkHighScore = () => {
+  console.log('getting called', highScores.length)
+  const highScoreLength = highScores.length
+  for(let i = 0; i < highScoreLength; i++) {
+    console.log(i);
+    if(score > highScores[i]) {
+      console.log('got a high score')
+      highScores.splice(i, 0, score);
+      if(highScores.length > 10) {
+        highScores.pop();
+      }
+    }
+  }
+}
+
+
 //the main gameplay function
 //will house gravity conditions,
 //checks if character is on ground
@@ -479,12 +506,13 @@ function animateCanvas() {
   clearEverything();
   if(pause || check == true){ //if pause or enemy interference clear the animation function
     if(check === true) {
+      checkHighScore(); 
       gameOver = true; 
     }
     return
   } else if (check == 'mario wins') {
     console.log('Mario won!')
-  }
+    }
 
   //making obstacles at set intervals
   if(Math.floor(xPosition) % obstacleDistance === 0 && xPosition != 0 && pipeCount < 1){
@@ -500,14 +528,14 @@ function animateCanvas() {
   }
 
   //increase game speed at certain conditions
-  if((score % 1000 === 0) && score != 0 && (gameSpeedTracker < 1)) {
+  if((score % 1000 === 0 || score % 1000 === 100) && score != 0 && score != 100 && (gameSpeedTracker < 1)) {
     gameSpeed += .5;
     // gameSpeed = Math.floor(gameSpeed * 10) / 10;
     enemyDistance += 50;
     obstacleDistance += 20;
     gameSpeedTracker++;
     xPosition = 0;
-  } else if(score % 1000 != 0) {
+  } else if(score % 1000 > 500) {
     gameSpeedTracker = 0;
   }
   //reset the xposition to loop the background image
@@ -534,6 +562,4 @@ $('#pause').on('click', (event) => {
   } else {
     $button.text('Resume Game');
   }
-
-
 })
