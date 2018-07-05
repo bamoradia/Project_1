@@ -20,7 +20,8 @@ let enemyDistance = 250;//distance at which new enemies spawn
 let obstacleDistance = 100;//distance at which new obstacles may spawn
 let check = false;
 const $button = $('#pause');
-let highScores = [0];
+let highScores = [];
+let gameStart = 1;
 
 
 const ctx = canvas.getContext('2d'); //setting up canvas
@@ -477,18 +478,51 @@ const makeObstacles = () => {
 
 //check for high score function 
 const checkHighScore = () => {
-  console.log('getting called', highScores.length)
-  const highScoreLength = highScores.length
-  for(let i = 0; i < highScoreLength; i++) {
-    console.log(i);
-    if(score > highScores[i]) {
-      console.log('got a high score')
-      highScores.splice(i, 0, score);
-      if(highScores.length > 10) {
-        highScores.pop();
-      }
-      return
+  const highScoreLength = highScores.length //for loop only runs for current length of array
+
+  if(gameStart === 1) {
+    const name = window.prompt('You got a high score! Enter your name.')
+    const highScoreObject = {
+      playerName: name, 
+      playerScore: score
     }
+    highScores[0] = highScoreObject
+  } else {
+      for(let i = 0; i < highScoreLength; i++) {
+        if(score > highScores[i].playerScore) { //checks if current score is greater than current array element
+          const name = window.prompt('You got a high score! Enter your name.')
+          const highScoreObject = {
+            playerName: name, 
+            playerScore: score
+          }
+          highScores.splice(i, 0, highScoreObject);
+          if(highScores.length > 10) {
+            highScores.pop();
+          }
+          return
+        }
+      }
+
+  }
+}
+
+const makeHighScore = () => {
+  
+  const $olRight = $('#rightList');
+  const $olLeft = $('#leftList');
+  $olRight.empty();
+  $olLeft.empty();
+  for(let i = 0; i < highScores.length; i++) {
+    console.log('trying to make new scores')
+    const $liLeft = $('<li/>');
+    $liLeft.text(highScores[i].playerName);
+    $olLeft.append($liLeft);
+    console.log($olLeft)
+
+    const $liRight = $('<li/>');
+    $liRight.text(highScores[i].playerScore);
+    $olRight.append($liRight);
+
   }
 }
 
@@ -548,7 +582,9 @@ function animateCanvas() {
   if(pause || check == true){ //if pause or enemy interference clear the animation function
     if(check === true) {
       checkHighScore(); 
+      makeHighScore();
       gameOver = true; 
+      gameStart++;
     }
     return
   } else if (check == 'mario wins') {

@@ -11,7 +11,35 @@ div {
 	font-family: 'Wendy One', sans-serif;
 	font-size: larger;
 	align-items: flex-end;
-
 }
 
 
+.highscore, .left, .right {
+	background-color: white;
+}
+
+
+
+
+span {
+	display: block;
+}
+
+
+.left {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.right
+{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+#rightList {
+	list-style-type: none;
+	padding: 0;
+}
