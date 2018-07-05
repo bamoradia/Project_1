@@ -65,6 +65,21 @@ blockImage.onload = function (X, Y, width, height) {//draw block image
 }
 
 
+let itemBlockImage = new Image();
+itemBlockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/boxItem.png';
+
+itemBlockImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(itemBlockImage, 2, 2, 66, 66, X, Y, width, height);
+}
+
+
+let noItemBlockImage = new Image();
+noItemBlockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/boxEmpty.png';
+
+noItemBlockImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(noItemBlockImage, 2, 2, 66, 66, X, Y, width, height);
+}
+
 let enemyImage = new Image();
 enemyImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/slimeWalk2.png';
 
@@ -128,6 +143,7 @@ class Obstacle {//class of obstacles to be called inside of another function
     this.hasItem = hasitem;
     this.item = item;
     this.type = type;
+    this.beenHit = false;
   }
   draw () {
     if(this.type === 'largePipe' || this.type === 'smallPipe') {//if obstacle is pipe
@@ -135,18 +151,22 @@ class Obstacle {//class of obstacles to be called inside of another function
     }
   }
   drawCoin() {
-    if(this.hasItem === true && this.item == 'coin'){//if obstacle has a coin
+    if(this.hasItem === true && this.item == 'coin' && this.beenHit === true){//if obstacle has a coin
       coinImage.onload(this.x, this.y);
     }
   }
   drawMushroom() {
-    if(this.hasItem === true && this.item == 'mushroom'){//if obstacle has a coin
+    if(this.hasItem === true && this.item == 'mushroom' && this.beenHit === true){//if obstacle has a coin
       mushroomImage.onload(this.x, this.y);
     }
   }
   drawBlock() {//if the obstacle is a block
-    if(this.type === 'block') {
+    if(this.type === 'block' && this.hasItem === false && this.beenHit === false) {
       blockImage.onload(this.x, this.y, this.width, this.height);
+    } else if(this.type === 'block' && this.hasItem === true && this.beenHit === false) {
+      itemBlockImage.onload(this.x, this.y, this.width, this.height)
+    } else if(this.type === 'block' && (this.type === 'coin' || this.type === 'mushroom') && this.beenHit === true) {
+      noItemBlockImage.onload(this.x, this.y, this.width, this.height)
     }
   }
 }
