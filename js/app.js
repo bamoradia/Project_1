@@ -665,7 +665,7 @@ function animateCanvas() {
   //making enemies at set intervals
   if(Math.floor(xPosition) % enemyDistance === 0 && xPosition != 0 && enemyCount < 1){
     const gumba1 = new Enemy();
-    gumba1.x = 660;
+    gumba1.x = 650;
     allEnemies.push(gumba1)
     enemyCount++;
   }
