@@ -1,4 +1,3 @@
-
 //setup Canvas
 const canvas = document.getElementById('my-canvas');
 
@@ -181,8 +180,6 @@ allEnemies[0] = gumba;
 allObstacles[0] = wall;
 
 
-
-
 //gravity function which is going to be used on every character
 const gravity = (object) => {
 	if(standingOnObject(object)){//checking if character is standing on an object
@@ -203,28 +200,24 @@ const standingOnObject = (character) => { //checks if the object is standing on 
       character.y + character.height >= allObstacles[i].y - 5 &&
       character.x < allObstacles[i].x + allObstacles[i].width &&
       character.x + character.width > allObstacles[i].x) {
-    character.yVelocity = 0; //set the character's yVelocity to 0
-    character.y =  allObstacles[i].y - character.height - 1; //draw the character to just above the ground
-    if(allObstacles[i].hasItem === true && allObstacles[i].item === 'coin'){
-      //if obstacle had a coin add 200 points to score
-      score += 200;
-      $score.text(`Score: ${score}`)
-    } else if(allObstacles[i].hasItem === true && allObstacles[i].item === 'mushroom') {
-      score += 350
-      $score.text(`Score: ${score}`)
-    }
-    allObstacles[i].hasItem = false;//change obstacle to no longer have item
-    jumpCount = 0; //reset the jump counter
-    return true
-    }
 
+      character.yVelocity = 0; //set the character's yVelocity to 0
+      character.y =  allObstacles[i].y - character.height - 1; //draw the character to just above the ground
+
+      if(allObstacles[i].hasItem === true && allObstacles[i].item === 'coin'){
+        //if obstacle had a coin add 200 points to score
+        score += 200;
+        $score.text(`Score: ${score}`)
+      } else if(allObstacles[i].hasItem === true && allObstacles[i].item === 'mushroom') {
+        score += 350
+        $score.text(`Score: ${score}`)
+      }
+
+      allObstacles[i].hasItem = false;//change obstacle to no longer have item
+      jumpCount = 0; //reset the jump counter
+      return true
+    }
   }
-
-  //const checkForGround = canvas.getContext('2d').getImageData(mainPlayer.x, groundLevel, mainPlayer.width, 1)
-  //console.log(checkForGround);
-  // for(let i = mainPlayer.x; i < (mainPlayer.x + mainPlayer.width); i++) {
-
-  // }
 
   //checking if character is at ground level
 	if(character.y + character.height >= groundLevel) { 
@@ -304,7 +297,7 @@ const checkForInterference = () => {
 
 
     //checking if player is attacking from on top of enemy and there is interference
-    if(mainPlayer.lastY < mainPlayer.y && mainPlayer.y <= 325){
+    if(mainPlayer.lastY < mainPlayer.y && mainPlayer.y <= 320){
 
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
@@ -354,7 +347,6 @@ const checkForInterference = () => {
 }
   
 document.addEventListener('keydown', (event) => {//event listener on keypresses
-
 
   if(event.keyCode == 39) { //if right key is pressed set variable to true
     rightKeyPress = true;
@@ -441,13 +433,13 @@ const makeObstacles = () => {
     let block;
     //make items based on random odds
     if(itemOdds < 0.1) {
-      block = new Obstacle(600, 250, 25, 25, true, 'mushroom', 'block');
+      block = new Obstacle(600, 245, 25, 25, true, 'mushroom', 'block');
     //  console.log('made mushroom block')
     } else if(itemOdds < 0.2){
-      block = new Obstacle(600, 250, 25, 25, true, 'coin', 'block');
+      block = new Obstacle(600, 245, 25, 25, true, 'coin', 'block');
      // console.log('made coin block')
     } else {
-      block = new Obstacle(600, 250, 25, 25, false, '', 'block');
+      block = new Obstacle(600, 245, 25, 25, false, '', 'block');
     }
 
     allObstacles.push(block); //add obstacle to the obstacles array
@@ -458,22 +450,20 @@ const makeObstacles = () => {
       let block1
       const itemOdds1 = Math.random();
       if(itemOdds1 < 0.05) {
-        block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'mushroom', 'block');
+        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, true, 'mushroom', 'block');
        // console.log('made blockgroup mushroom')
       } else if(itemOdds1 < 0.15){
-        block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'coin', 'block');
+        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, true, 'coin', 'block');
        // console.log('made blockgroup coin')
       } else {
-        block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, false, '', 'block');
+        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, false, '', 'block');
       }
 
       allObstacles.push(block1);
       blockCount++;
       blockGroupOdds = Math.random(); 
     }
-
   }
-
 }
 
 
@@ -490,32 +480,34 @@ const checkHighScore = () => {
     }
     highScores[0] = highScoreObject
   } else {
-      for(let i = 0; i < highScoreLength; i++) {
-        if(score > highScores[i].playerScore) { //checks if current score is greater than current array element
-          const name = window.prompt('You got a high score! Enter your name.')
-          const highScoreObject = {
-            playerName: name, 
-            playerScore: score
-          }
-          highScores.splice(i, 0, highScoreObject);
-          if(highScores.length > 10) {
-            highScores.pop();
-          }
-          return
-        }
-      }
+    for(let i = 0; i < highScoreLength; i++) {
 
-      //add the current score to the to the end of the array if the high score list is less than 10
-      if(score > 0 && highScores.length < 10) {
+      if(score > highScores[i].playerScore) { //checks if current score is greater than current array element
         const name = window.prompt('You got a high score! Enter your name.')
         const highScoreObject = {
           playerName: name, 
           playerScore: score
         }
-        highScores.push(highScoreObject);
 
+        highScores.splice(i, 0, highScoreObject);
+
+        if(highScores.length > 10) {
+          highScores.pop();
+        }
+
+        return
       }
+    }
 
+    //add the current score to the to the end of the array if the high score list is less than 10
+    if(score > 0 && highScores.length < 10) {
+      const name = window.prompt('You got a high score! Enter your name.')
+      const highScoreObject = {
+        playerName: name, 
+        playerScore: score
+      }
+      highScores.push(highScoreObject);
+    }
   }
 }
 
@@ -527,6 +519,7 @@ const makeHighScore = () => {
   const $olLeft = $('#leftList');
   $olRight.empty();
   $olLeft.empty();
+
   for(let i = 0; i < highScores.length; i++) {
     const $liLeft = $('<li/>');
     $liLeft.text(highScores[i].playerName);
@@ -535,7 +528,6 @@ const makeHighScore = () => {
     const $liRight = $('<li/>');
     $liRight.text(highScores[i].playerScore);
     $olRight.append($liRight);
-
   }
 }
 
@@ -580,7 +572,7 @@ const resetGame = () => {
 
 const startArary = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and mushrooms to get more points.', 'Try and get the high score!'];
 
-
+//used to write the instructions to the screen when the first game is played
 if(gameStart === 0) {
   for(let i = 0; i < startArary.length; i++) {
     ctx.beginPath();
@@ -590,18 +582,9 @@ if(gameStart === 0) {
   }
 }
 
-
-
-
-
-
-
-
-
 //the main gameplay function
 //will house gravity conditions,
 //checks if character is on ground
-//
 function animateCanvas() {
   movePlayer(); //move player
 	gravity(mainPlayer); //gravity's affect on the player
@@ -628,7 +611,7 @@ function animateCanvas() {
   //making enemies at set intervals
   if(Math.floor(xPosition) % enemyDistance === 0 && xPosition != 0 && enemyCount < 1){
     const gumba1 = new Enemy();
-    gumba1.x = 650;
+    gumba1.x = 660;
     allEnemies.push(gumba1)
     enemyCount++;
   }
@@ -658,18 +641,23 @@ function animateCanvas() {
 $('#pause').on('click', (event) => {
   pause = !pause;
 
+  //if first game, then the button starts the game
   if(gameStart === 0) {
     //clearCanvas();
     pause = !pause;
     animateCanvas();
     $button.text('Pause Game');
     gameStart++;
-  } else if(gameOver === true) {
+  } else if(gameOver === true) {//if game over then run resetGame function
     resetGame();
-  } else if(pause === false){
+  } else if(pause === false){ //if game is paused then resume the game
     $button.text('Pause Game');
     animateCanvas();
-  } else {
+  } else {//otherwise pause the game
     $button.text('Resume Game');
   }
 })
+
+
+
+

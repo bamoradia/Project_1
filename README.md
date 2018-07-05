@@ -7,16 +7,14 @@
 * Can double jump using up arrow as well
 * Use the left and right arrows to move the character
 * Avoid the enemies and the obstacles
-* Collect PowerUps to help you score more points
-* The game will be moving, the user must keep up with the game
+* Collect coins and mushrooms to help you score more points
+* Obstacles and enemies will randomly appear
+* The speed of the game will increase every 1000 points
+* The game will keep track of high scores
 
-### Stretch Goals
+#### Stretch Goals
 
-* Blocks and Enemies will randomly appear
-* Enemies will move left originally then move right if they hit an obstacle
 * User can interact with the obstacles to find more PowerUps and break obstacles
-
-
 
 
 ## Wireframes
