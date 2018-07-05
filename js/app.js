@@ -87,6 +87,13 @@ enemyImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(enemyImage, 2, 2, 47, 22, X, Y, width, height);
 }
 
+let enemyRightImage = new Image();
+enemyRightImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/slimeWalk1.png';
+
+enemyRightImage.onload = function (X, Y, width, height) {//draw block image
+  ctx.drawImage(enemyRightImage, 2, 2, 47, 22, X, Y, width, height);
+}
+
 
 let mushroomImage = new Image();
 mushroomImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/star.png';
@@ -128,7 +135,12 @@ class Enemy {//enemy Class, will be used to make multiple enemies
     this.xVelocity = -1; //all enemies will move in relation to the background intially
   }
   draw() {
-    enemyImage.onload(this.x, this.y, this.width, this.height)
+    if(this.xVelocity < 0) {
+      enemyImage.onload(this.x, this.y, this.width, this.height)
+    } else if (this.xVelocity > 0) {
+      enemyRightImage.onload(this.x, this.y, this.width, this.height)
+    }
+    
   }
 }
 
