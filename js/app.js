@@ -304,7 +304,7 @@ const checkForInterference = () => {
 
 
     //checking if player is attacking from on top of enemy and there is interference
-    if(mainPlayer.lastY < mainPlayer.y) {
+    if(mainPlayer.lastY < mainPlayer.y && mainPlayer.y <= 325){
 
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
@@ -478,6 +478,7 @@ const makeObstacles = () => {
 
 
 //check for high score function 
+//keeps the highest 10 scores
 const checkHighScore = () => {
   const highScoreLength = highScores.length //for loop only runs for current length of array
 
@@ -504,9 +505,22 @@ const checkHighScore = () => {
         }
       }
 
+      //add the current score to the to the end of the array if the high score list is less than 10
+      if(score > 0 && highScores.length < 10) {
+        const name = window.prompt('You got a high score! Enter your name.')
+        const highScoreObject = {
+          playerName: name, 
+          playerScore: score
+        }
+        highScores.push(highScoreObject);
+
+      }
+
   }
 }
 
+
+//add the new high score array to the page
 const makeHighScore = () => {
   
   const $olRight = $('#rightList');
@@ -514,11 +528,9 @@ const makeHighScore = () => {
   $olRight.empty();
   $olLeft.empty();
   for(let i = 0; i < highScores.length; i++) {
-    console.log('trying to make new scores')
     const $liLeft = $('<li/>');
     $liLeft.text(highScores[i].playerName);
     $olLeft.append($liLeft);
-    console.log($olLeft)
 
     const $liRight = $('<li/>');
     $liRight.text(highScores[i].playerScore);
@@ -545,7 +557,10 @@ const resetGame = () => {
   check = false;
   allObstacles.length = 0;
   allEnemies.length = 0;;
+  $score.text(`Score: ${score}`);
 
+
+  //reset mainPlayer stats
   mainPlayer.x = 200;
   mainPlayer.height = 40;
   mainPlayer.y = groundLevel - 40;
@@ -588,10 +603,7 @@ function animateCanvas() {
       gameStart++;
     }
     return
-  } else if (check == 'mario wins') {
-    console.log('Mario won!')
-    }
-
+  }
   //making obstacles at set intervals
   if(Math.floor(xPosition) % obstacleDistance === 0 && xPosition != 0 && pipeCount < 1){
     makeObstacles();
@@ -617,7 +629,7 @@ function animateCanvas() {
     gameSpeedTracker = 0;
   }
   //reset the xposition to loop the background image
-  if(xPosition >= 2792) {
+  if(xPosition >= 500) {
     xPosition = 0;
   }
   window.requestAnimationFrame(animateCanvas)
