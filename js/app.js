@@ -210,7 +210,8 @@ const standingOnObject = (character) => { //checks if the object is standing on 
       score += 200;
       $score.text(`Score: ${score}`)
     } else if(allObstacles[i].hasItem === true && allObstacles[i].item === 'mushroom') {
-      console.log('collected a mushroom')
+      score += 350
+      $score.text(`Score: ${score}`)
     }
     allObstacles[i].hasItem = false;//change obstacle to no longer have item
     jumpCount = 0; //reset the jump counter
@@ -605,14 +606,14 @@ function animateCanvas() {
   }
 
   //increase game speed at certain conditions
-  if((score % 1000 === 0 || score % 1000 === 100) && score != 0 && score != 100 && (gameSpeedTracker < 1)) {
+  if((score % 1000 >= 0 && score % 1000 < 400) && score >= 600 && (gameSpeedTracker < 1)) {
     gameSpeed += .5;
     // gameSpeed = Math.floor(gameSpeed * 10) / 10;
     enemyDistance += 50;
     obstacleDistance += 20;
     gameSpeedTracker++;
     xPosition = 0;
-  } else if(score % 1000 > 500) {
+  } else if(score % 1000 > 600) {
     gameSpeedTracker = 0;
   }
   //reset the xposition to loop the background image
