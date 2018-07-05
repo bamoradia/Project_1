@@ -624,15 +624,15 @@ const resetGame = () => {
 
 }
 
-const startArary = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and stars to get more points.', 'Try and get the high score!'];
+const startArray = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and stars to get more points.', 'Try and get the high score!'];
 
 //used to write the instructions to the screen when the first game is played
 if(gameStart === 0) {
-  for(let i = 0; i < startArary.length; i++) {
+  for(let i = 0; i < startArray.length; i++) {
     ctx.beginPath();
     ctx.font= 'bold 15px Wendy';
     ctx.fillStyle = "black";
-    ctx.fillText(startArary[i], 125, 200 + i * 30);
+    ctx.fillText(startArray[i], 125, 200 + i * 30);
   }
 }
 
