@@ -1,7 +1,7 @@
-# 2D Open World Platform Game.
+# 2D Open World Platform Game
 
 
-##About the Game
+## About the Game
 
 * This game is built using HTML Canvas
 * It also uses jQuery to update information on the page about the game
