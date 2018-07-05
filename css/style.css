@@ -14,11 +14,16 @@ div {
 }
 
 
-.highscore, .left, .right {
+.highscore {
 	background-color: white;
+	margin: 0 0 0 65px;
 }
 
-
+#pause {
+	display: inline-block;
+	text-align: center;
+	margin: 0 0 0 275px;
+}
 
 
 span {
@@ -30,6 +35,7 @@ span {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	background-color: white;
 }
 
 .right
@@ -37,9 +43,27 @@ span {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	background-color: white;
 }
 
 #rightList {
 	list-style-type: none;
 	padding: 0;
+}
+
+
+h5 {
+	margin: 10px 0;
+	font-family: 'Fredoka One', sans-serif;
+}
+
+ol {
+	margin: 5px 0;
+}
+
+
+li {
+	font-size: large;
+	font-family: 'Fredoka One', sans-serif;
+	font-weight: lighter;
 }

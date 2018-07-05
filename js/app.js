@@ -279,7 +279,20 @@ const checkForInterference = () => {
       rightKeyPress == false)
     {
       mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3; //move player to right edge of obstacle
+    } else if(mainPlayer.y <= allObstacles[i].y + allObstacles[i].height + 1 && //
+      mainPlayer.y >= allObstacles[i].y + allObstacles[i].height - 7 &&
+      mainPlayer.x < allObstacles[i].x + allObstacles[i].width &&
+      mainPlayer.x + mainPlayer.width > allObstacles[i].x) {
+
+      console.log('hit the bottom of the block');
+      mainPlayer.yVelocity = 0;
+      mainPlayer.y = allObstacles[i].y + allObstacles[i].height + 2
     }
+
+
+
+
+
   }  
   for(let i = 0; i < allEnemies.length; i++) {//checking interference between player and enemies
     const enemy = allEnemies[i];
@@ -445,18 +458,18 @@ const makeObstacles = () => {
     allObstacles.push(block); //add obstacle to the obstacles array
 
     let blockGroupOdds = Math.random();
-    while(blockGroupOdds < 0.4) {//make groups of blocks
+    while(blockGroupOdds < 0.35 && blockCount < 5) {//make groups of blocks
       //console.log('made blockgroup')
-      let block1
+      let block1;
       const itemOdds1 = Math.random();
-      if(itemOdds1 < 0.05) {
-        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, true, 'mushroom', 'block');
+      if(itemOdds1 < 0.04) {
+        block1 = new Obstacle(600 + 25 * blockCount, 150, 25, 25, true, 'mushroom', 'block');
        // console.log('made blockgroup mushroom')
-      } else if(itemOdds1 < 0.15){
-        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, true, 'coin', 'block');
+      } else if(itemOdds1 < 0.125){
+        block1 = new Obstacle(600 + 25 * blockCount, 150, 25, 25, true, 'coin', 'block');
        // console.log('made blockgroup coin')
       } else {
-        block1 = new Obstacle(600 + 30 * blockCount, 150, 25, 25, false, '', 'block');
+        block1 = new Obstacle(600 + 25 * blockCount, 150, 25, 25, false, '', 'block');
       }
 
       allObstacles.push(block1);
