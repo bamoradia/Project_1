@@ -161,11 +161,17 @@ class Obstacle {//class of obstacles to be called inside of another function
     }
   }
   drawBlock() {//if the obstacle is a block
-    if(this.type === 'block' && this.hasItem === false && this.beenHit === false) {
+    if(this.type === 'block' && this.hasItem === false) {
+
       blockImage.onload(this.x, this.y, this.width, this.height);
+
     } else if(this.type === 'block' && this.hasItem === true && this.beenHit === false) {
+
       itemBlockImage.onload(this.x, this.y, this.width, this.height)
-    } else if(this.type === 'block' && (this.type === 'coin' || this.type === 'mushroom') && this.beenHit === true) {
+
+    } else if(this.type === 'block' && (this.item === 'coin' || this.item === 'mushroom') 
+      && this.beenHit === true) {
+
       noItemBlockImage.onload(this.x, this.y, this.width, this.height)
     }
   }
@@ -224,16 +230,18 @@ const standingOnObject = (character) => { //checks if the object is standing on 
       character.yVelocity = 0; //set the character's yVelocity to 0
       character.y =  allObstacles[i].y - character.height - 1; //draw the character to just above the ground
 
-      if(allObstacles[i].hasItem === true && allObstacles[i].item === 'coin'){
+      if(allObstacles[i].hasItem === true && allObstacles[i].item === 'coin' && allObstacles[i].beenHit === true){
         //if obstacle had a coin add 200 points to score
         score += 200;
         $score.text(`Score: ${score}`)
-      } else if(allObstacles[i].hasItem === true && allObstacles[i].item === 'mushroom') {
+        allObstacles[i].hasItem = false;
+      } else if(allObstacles[i].hasItem === true && allObstacles[i].item === 'mushroom' && allObstacles[i].beenHit === true) {
         score += 350
         $score.text(`Score: ${score}`)
+        allObstacles[i].hasItem = false;
       }
 
-      allObstacles[i].hasItem = false;//change obstacle to no longer have item
+
       jumpCount = 0; //reset the jump counter
       return true
     }
@@ -307,6 +315,7 @@ const checkForInterference = () => {
 
       mainPlayer.yVelocity = 0;
       mainPlayer.y = allObstacles[i].y + allObstacles[i].height + 2
+      allObstacles[i].beenHit = true;
     }
 
 
