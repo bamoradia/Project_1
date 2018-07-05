@@ -42,42 +42,42 @@ pipeImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let coinImage = new Image();
-coinImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/items_sheet.png';
+coinImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/coinGold.png';
 
 coinImage.onload = function (X, Y) {//draw the ground image
-  ctx.drawImage(coinImage, 3, 97, 15, 15, X, Y - 25, 30, 20) 
+  ctx.drawImage(coinImage, 12, 12, 46, 46, X-2, Y - 30, 30, 30) 
 }
 
 
 let characterImage = new Image();
-characterImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/luigi_sprite_sheet.png';
+characterImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/p1_stand.png';
 
 characterImage.onload = function (X, Y, width, height) {//draw block image
-  ctx.drawImage(characterImage, 210, 0, 15, 15, X, Y, width, height);
+  ctx.drawImage(characterImage, 2, 2, 62, 88, X, Y, width, height);
 }
 
 
 let blockImage = new Image();
-blockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/blocks_sheet.png';
+blockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/box.png';
 
 blockImage.onload = function (X, Y, width, height) {//draw block image
-  ctx.drawImage(blockImage, 20, 1, 15, 15, X, Y, width, height);
+  ctx.drawImage(blockImage, 2, 2, 66, 66, X, Y, width, height);
 }
 
 
 let enemyImage = new Image();
-enemyImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/enemy_sheet.png';
+enemyImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/slimeWalk2.png';
 
 enemyImage.onload = function (X, Y, width, height) {//draw block image
-  ctx.drawImage(enemyImage, 0, 16, 17, 15, X, Y, width, height);
+  ctx.drawImage(enemyImage, 2, 2, 47, 22, X, Y, width, height);
 }
 
 
 let mushroomImage = new Image();
-mushroomImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/items_sheet.png';
+mushroomImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/star.png';
 
 mushroomImage.onload = function (X, Y) {//draw the ground image
-  ctx.drawImage(mushroomImage, 15, 3, 17, 14, X, Y - 20, 25, 20) 
+  ctx.drawImage(mushroomImage, 2, 12, 48, 46, X-8, Y - 30, 30, 30) 
 }
 
 //make an array with all the current characters 
@@ -276,15 +276,15 @@ const checkForInterference = () => {
       mainPlayer.y + mainPlayer.height <= allObstacles[i].y + allObstacles[i].height) &&
       mainPlayer.x < allObstacles[i].x + allObstacles[i].width + 3 &&
       mainPlayer.x > allObstacles[i].x + allObstacles[i].width - 3 && 
-      rightKeyPress == false)
-    {
+      rightKeyPress == false){
+
       mainPlayer.x = allObstacles[i].x + allObstacles[i].width + 3; //move player to right edge of obstacle
+
     } else if(mainPlayer.y <= allObstacles[i].y + allObstacles[i].height + 1 && //
-      mainPlayer.y >= allObstacles[i].y + allObstacles[i].height - 7 &&
+      mainPlayer.y >= allObstacles[i].y + allObstacles[i].height - 15 &&
       mainPlayer.x < allObstacles[i].x + allObstacles[i].width &&
       mainPlayer.x + mainPlayer.width > allObstacles[i].x) {
 
-      console.log('hit the bottom of the block');
       mainPlayer.yVelocity = 0;
       mainPlayer.y = allObstacles[i].y + allObstacles[i].height + 2
     }
@@ -583,7 +583,7 @@ const resetGame = () => {
 
 }
 
-const startArary = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and mushrooms to get more points.', 'Try and get the high score!'];
+const startArary = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and stars to get more points.', 'Try and get the high score!'];
 
 //used to write the instructions to the screen when the first game is played
 if(gameStart === 0) {
