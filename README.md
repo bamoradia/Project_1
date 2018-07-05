@@ -7,7 +7,7 @@
 * Can double jump using up arrow as well
 * Use the left and right arrows to move the character
 * Avoid the enemies and the obstacles
-* Collect coins and mushrooms to help you score more points
+* Collect coins and stars to help you score more points
 * Obstacles and enemies will randomly appear
 * The speed of the game will increase every 1000 points
 * The game will keep track of high scores

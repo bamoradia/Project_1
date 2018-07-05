@@ -106,9 +106,9 @@ mainPlayer.draw();//draw the main character for the first time
 class Enemy {//enemy Class, will be used to make multiple enemies
 	constructor() {
     this.x = 400; 
-    this.y = 345;
+    this.y = 350;
     this.width = 20; 
-    this.height =  30;
+    this.height =  25;
     this.yVelocity =  0; 
     this.xVelocity = -1; //all enemies will move in relation to the background intially
   }
@@ -310,7 +310,7 @@ const checkForInterference = () => {
 
 
     //checking if player is attacking from on top of enemy and there is interference
-    if(mainPlayer.lastY < mainPlayer.y && mainPlayer.y <= 320){
+    if(mainPlayer.lastY < mainPlayer.y && mainPlayer.y <= 325){
 
       if(enemy.x < mainPlayer.x + mainPlayer.width &&
         enemy.x + enemy.width > mainPlayer.x &&
