@@ -440,10 +440,10 @@ const makeObstacles = () => {
     //make items based on random odds
     if(itemOdds < 0.1) {
       block = new Obstacle(600, 250, 25, 25, true, 'mushroom', 'block');
-      console.log('made mushroom block')
+    //  console.log('made mushroom block')
     } else if(itemOdds < 0.2){
       block = new Obstacle(600, 250, 25, 25, true, 'coin', 'block');
-      console.log('made coin block')
+     // console.log('made coin block')
     } else {
       block = new Obstacle(600, 250, 25, 25, false, '', 'block');
     }
@@ -452,15 +452,15 @@ const makeObstacles = () => {
 
     let blockGroupOdds = Math.random();
     while(blockGroupOdds < 0.4) {//make groups of blocks
-      console.log('made blockgroup')
+      //console.log('made blockgroup')
       let block1
       const itemOdds1 = Math.random();
       if(itemOdds1 < 0.05) {
         block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'mushroom', 'block');
-        console.log('made blockgroup mushroom')
+       // console.log('made blockgroup mushroom')
       } else if(itemOdds1 < 0.15){
         block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, true, 'coin', 'block');
-        console.log('made blockgroup coin')
+       // console.log('made blockgroup coin')
       } else {
         block1 = new Obstacle(600 + 25 * blockCount, 250, 25, 25, false, '', 'block');
       }
@@ -487,6 +487,7 @@ const checkHighScore = () => {
       if(highScores.length > 10) {
         highScores.pop();
       }
+      return
     }
   }
 }
@@ -518,6 +519,13 @@ const resetGame = () => {
   mainPlayer.lastY = 335;
   mainPlayer.moving = false
   mainPlayer.draw();
+
+  const enemy1 = new Enemy();
+  const wall1 = new Obstacle(275, 345, 20, 30, false, '', 'smallPipe')
+  allObstacles[0] = wall1;
+  allEnemies[0] = enemy1;
+
+
 
   animateCanvas();
 
