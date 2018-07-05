@@ -21,7 +21,7 @@ let obstacleDistance = 100;//distance at which new obstacles may spawn
 let check = false;
 const $button = $('#pause');
 let highScores = [];
-let gameStart = 1;
+let gameStart = 0;
 
 
 const ctx = canvas.getContext('2d'); //setting up canvas
@@ -574,12 +574,28 @@ const resetGame = () => {
   const wall1 = new Obstacle(275, 345, 20, 30, false, '', 'smallPipe')
   allObstacles[0] = wall1;
   allEnemies[0] = enemy1;
-
-
-
   animateCanvas();
 
 }
+
+const startArary = ['Use the left and right arrows to move.', 'Use the up arrow to jump and double jump.', 'Avoid the obstacles and kill the enemies.', 'Collect coins and mushrooms to get more points.', 'Try and get the high score!'];
+
+
+if(gameStart === 0) {
+  for(let i = 0; i < startArary.length; i++) {
+    ctx.beginPath();
+    ctx.font= 'bold 15px Wendy';
+    ctx.fillStyle = "black";
+    ctx.fillText(startArary[i], 125, 200 + i * 30);
+  }
+}
+
+
+
+
+
+
+
 
 
 //the main gameplay function
@@ -637,14 +653,18 @@ function animateCanvas() {
 }
 
 
- animateCanvas();
-
 //just used to prevent overheating and overusing resources
 //remove for actual game
 $('#pause').on('click', (event) => {
   pause = !pause;
 
-  if(gameOver === true) {
+  if(gameStart === 0) {
+    //clearCanvas();
+    pause = !pause;
+    animateCanvas();
+    $button.text('Pause Game');
+    gameStart++;
+  } else if(gameOver === true) {
     resetGame();
   } else if(pause === false){
     $button.text('Pause Game');
