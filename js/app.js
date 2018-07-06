@@ -26,7 +26,7 @@ let gameStart = 0;
 const ctx = canvas.getContext('2d'); //setting up canvas
 let groundImage = new Image(); //setting up ground image
 
-groundImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/world1_image.png';
+groundImage.src = 'sprites/world1_image.png';
 
 groundImage.onload = function () {//draw the ground image
 	ctx.drawImage(groundImage, xPosition, 200, 600, 25, 0, 375, canvas.width, 25)
@@ -34,7 +34,7 @@ groundImage.onload = function () {//draw the ground image
 
 
 let pipeImage = new Image();
-pipeImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/blocks_sheet.png';
+pipeImage.src = 'sprites/blocks_sheet.png';
 
 pipeImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(pipeImage, 0, 160, 32, 32, X, Y, width, height);
@@ -42,7 +42,7 @@ pipeImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let coinImage = new Image();
-coinImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/coinGold.png';
+coinImage.src = 'sprites/coinGold.png';
 
 coinImage.onload = function (X, Y) {//draw the ground image
   ctx.drawImage(coinImage, 12, 12, 46, 46, X-2, Y - 30, 30, 30) 
@@ -50,7 +50,7 @@ coinImage.onload = function (X, Y) {//draw the ground image
 
 
 let characterImage = new Image();
-characterImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/p1_stand.png';
+characterImage.src = 'sprites/p1_stand.png';
 
 characterImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(characterImage, 2, 2, 62, 88, X, Y, width, height);
@@ -58,7 +58,7 @@ characterImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let blockImage = new Image();
-blockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/box.png';
+blockImage.src = 'sprites/box.png';
 
 blockImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(blockImage, 2, 2, 66, 66, X, Y, width, height);
@@ -66,7 +66,7 @@ blockImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let itemBlockImage = new Image();
-itemBlockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/boxItem.png';
+itemBlockImage.src = 'sprites/boxItem.png';
 
 itemBlockImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(itemBlockImage, 2, 2, 66, 66, X, Y, width, height);
@@ -74,21 +74,21 @@ itemBlockImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let noItemBlockImage = new Image();
-noItemBlockImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/boxEmpty.png';
+noItemBlockImage.src = 'sprites/boxEmpty.png';
 
 noItemBlockImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(noItemBlockImage, 2, 2, 66, 66, X, Y, width, height);
 }
 
 let enemyImage = new Image();
-enemyImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/slimeWalk2.png';
+enemyImage.src = 'sprites/slimeWalk2.png';
 
 enemyImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(enemyImage, 2, 2, 47, 22, X, Y, width, height);
 }
 
 let enemyRightImage = new Image();
-enemyRightImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/slimeWalk1.png';
+enemyRightImage.src = 'sprites/slimeWalk1.png';
 
 enemyRightImage.onload = function (X, Y, width, height) {//draw block image
   ctx.drawImage(enemyRightImage, 2, 2, 47, 22, X, Y, width, height);
@@ -96,7 +96,7 @@ enemyRightImage.onload = function (X, Y, width, height) {//draw block image
 
 
 let mushroomImage = new Image();
-mushroomImage.src = '/../Users/bamoradia/Documents/funky-ducks/Project_1/js/sprites/star.png';
+mushroomImage.src = 'sprites/star.png';
 
 mushroomImage.onload = function (X, Y) {//draw the ground image
   ctx.drawImage(mushroomImage, 2, 12, 48, 46, X-8, Y - 30, 30, 30) 
